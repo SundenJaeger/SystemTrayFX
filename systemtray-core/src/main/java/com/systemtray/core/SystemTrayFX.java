@@ -14,14 +14,13 @@ import org.eclipse.swt.widgets.*;
 import java.util.*;
 import java.util.List;
 
-public class SystemTrayFX implements ISystemTrayFX {
+public class SystemTrayFX implements ISystemTray {
     private Display display;
     private Shell shell;
     private Menu menu;
     private TrayItem trayItem;
     private TrayNotification trayNotification;
 
-    private final Queue<Runnable> pendingActions = new ArrayDeque<>();
     private final List<MenuItem> menuItems = new ArrayList<>();
     private final List<org.eclipse.swt.graphics.Image> swtImages = new ArrayList<>();
     private volatile boolean initialized = false;
@@ -68,82 +67,17 @@ public class SystemTrayFX implements ISystemTrayFX {
         titleProperty.set(title);
     }
 
+    @Override
     public void addEntry(MenuItem... items) {
         if (!initialized) {
-            menuItems.addAll(List.of(items));
+            this.menuItems.addAll(List.of(items));
         } else {
             display.asyncExec(() -> {
-                for (MenuItem item : items) {
+                for (var item : items) {
                     item.create(display, menu, this);
                 }
             });
         }
-    }
-
-    @Override
-    public void addMenuItem(javafx.scene.control.MenuItem fxItem) {
-//        Runnable task = () -> {
-//            MenuItem menuItem = Utils.convertFXItem(display, menu, fxItem);
-//        };
-//        if (!initialized) {
-//            pendingActions.add(task);
-//        } else {
-//            display.asyncExec(task);
-//        }
-    }
-
-    @Override
-    public void addMenuItem(String text, Image image, Runnable action) {
-//        Runnable task = () -> {
-//            MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
-//            menuItem.setText(text);
-//
-//            if (image != null) {
-//                menuItem.setImage(createImage(Utils.toSWTImage(image)));
-//            }
-//            menuItem.addListener(SWT.Selection, event -> Platform.runLater(action));
-//        };
-//
-//        if (!initialized) {
-//            pendingActions.add(task);
-//        } else {
-//            display.asyncExec(task);
-//        }
-    }
-
-    @Override
-    public void addExitItem(String text, Image image) {
-//        Runnable task = () -> {
-//            MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
-//            menuItem.setText(text);
-//
-//            if (image != null) {
-//                menuItem.setImage(createImage(Utils.toSWTImage(image)));
-//            }
-//            menuItem.addListener(SWT.Selection, event -> Platform.runLater(() -> {
-//                dispose();
-//                Platform.exit();
-//            }));
-//        };
-//
-//        if (!initialized) {
-//            pendingActions.add(task);
-//            return;
-//        }
-//
-//        display.asyncExec(task);
-    }
-
-    @Override
-    public void addSeparator() {
-//        Runnable task = () -> new MenuItem(menu, SWT.SEPARATOR);
-//
-//        if (!initialized) {
-//            pendingActions.add(task);
-//            return;
-//        }
-//
-//        display.asyncExec(task);
     }
 
     @Override
@@ -201,13 +135,8 @@ public class SystemTrayFX implements ISystemTrayFX {
             trayNotification = new TrayNotification(display, shell, trayItem);
 
             initialized = true;
-//            for (Runnable task : pendingActions) {
-//                display.asyncExec(task);
-//            }
-//            pendingActions.clear();
-
             display.asyncExec(() -> {
-                for (MenuItem item : menuItems) {
+                for (var item : menuItems) {
                     item.create(display, menu, this);
                 }
                 menuItems.clear();
