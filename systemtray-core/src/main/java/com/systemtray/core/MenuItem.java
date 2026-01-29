@@ -16,6 +16,8 @@ public class MenuItem {
 
     private ObjectProperty<EventHandler<ActionEvent>> onAction;
 
+    /* ---------------- Constructors ---------------- */
+
     public MenuItem() {
         this("Item", null);
     }
@@ -45,6 +47,10 @@ public class MenuItem {
 
     public void setImage(Image image) {
         this.image.set(image);
+    }
+
+    public boolean isDisabled() {
+        return disable.get();
     }
 
     public void setDisable(boolean isDisabled) {
