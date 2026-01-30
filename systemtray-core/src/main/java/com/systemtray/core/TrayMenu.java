@@ -1,6 +1,7 @@
 package com.systemtray.core;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import org.eclipse.swt.SWT;
@@ -9,6 +10,10 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
 public class TrayMenu extends TrayMenuItem {
+    private Display display;
+    private Menu subMenu;
+    private SystemTrayFX ctx;
+
     private final ObservableList<TrayMenuItem> items = FXCollections.observableArrayList();
 
     public TrayMenu() {
@@ -33,6 +38,15 @@ public class TrayMenu extends TrayMenuItem {
         if (items != null) {
             this.items.addAll(items);
         }
+
+        this.items.addListener((ListChangeListener<TrayMenuItem>) change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    display.asyncExec(() -> change.getAddedSubList()
+                            .forEach(trayMenuItem -> trayMenuItem.create(display, subMenu, ctx)));
+                }
+            }
+        });
     }
 
     public ObservableList<TrayMenuItem> getItems() {
@@ -41,6 +55,9 @@ public class TrayMenu extends TrayMenuItem {
 
     @Override
     protected void create(Display display, Menu menu, SystemTrayFX ctx) {
+        this.display = display;
+        this.ctx = ctx;
+
         MenuItem root = new MenuItem(menu, SWT.CASCADE);
         root.setText(getText());
         root.setEnabled(!isDisabled());
@@ -73,11 +90,9 @@ public class TrayMenu extends TrayMenuItem {
             }
         });
 
-        Menu subMenu = new Menu(menu);
+        subMenu = new Menu(menu);
         root.setMenu(subMenu);
 
-        for (TrayMenuItem item : items) {
-            item.create(display, subMenu, ctx);
-        }
+        items.forEach(trayMenuItem -> trayMenuItem.create(display, subMenu, ctx));
     }
 }
