@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.*;
 
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class SystemTrayFX implements ISystemTray {
     private Display display;
@@ -26,6 +27,9 @@ public class SystemTrayFX implements ISystemTray {
 
     private final ObservableList<TrayMenuItem> items = FXCollections.observableArrayList();
     private final List<org.eclipse.swt.graphics.Image> swtImages = new ArrayList<>();
+
+    private final Queue<TrayMenuItem[]> pendingItems = new ConcurrentLinkedDeque<>();
+    private volatile boolean isInitialized = false;
 
     private final Stage stage;
     private final Image trayIcon;
@@ -63,6 +67,17 @@ public class SystemTrayFX implements ISystemTray {
                 display.asyncExec(() -> trayItem.setToolTipText(newValue));
             }
         });
+
+        items.addListener((ListChangeListener<TrayMenuItem>) change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    display.asyncExec(() -> change.getAddedSubList().forEach(trayMenuItem -> trayMenuItem.create(display, menu, SystemTrayFX.this)));
+                }
+                if (change.wasRemoved()) {
+                    display.asyncExec(() -> change.getRemoved().forEach(TrayMenuItem::dispose));
+                }
+            }
+        });
     }
 
     public StringProperty titleProperty() {
@@ -83,7 +98,11 @@ public class SystemTrayFX implements ISystemTray {
 
     @Override
     public void addEntry(TrayMenuItem... items) {
-        this.items.addAll(items);
+        if (isInitialized) {
+            this.items.addAll(items);
+        } else {
+            pendingItems.offer(items);
+        }
     }
 
     @Override
@@ -146,16 +165,11 @@ public class SystemTrayFX implements ISystemTray {
 
             trayNotification = new TrayNotification(display, shell, trayItem);
 
-            items.addListener((ListChangeListener<TrayMenuItem>) change -> {
-                while (change.next()) {
-                    if (change.wasAdded()) {
-                        display.asyncExec(() -> change.getAddedSubList().forEach(trayMenuItem -> trayMenuItem.create(display, menu, SystemTrayFX.this)));
-                    }
-                    if (change.wasRemoved()) {
-                        display.asyncExec(() -> change.getRemoved().forEach(TrayMenuItem::dispose));
-                    }
-                }
-            });
+            isInitialized = true;
+            TrayMenuItem[] pending;
+            while ((pending = pendingItems.poll()) != null) {
+                this.items.addAll(pending);
+            }
 
             while (!display.isDisposed()) {
                 if (!display.readAndDispatch()) display.sleep();
