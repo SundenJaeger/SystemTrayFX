@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 
 public class TrayExitMenuItem extends TrayMenuItem {
     public TrayExitMenuItem() {
-        super("Exit");
+        this("Exit");
         setOnAction(event -> {
             dispose();
             Platform.exit();
@@ -13,7 +13,7 @@ public class TrayExitMenuItem extends TrayMenuItem {
     }
 
     public TrayExitMenuItem(String text) {
-        super(text);
+        this(text, null);
         setOnAction(event -> {
             dispose();
             Platform.exit();

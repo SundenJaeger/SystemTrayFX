@@ -15,11 +15,11 @@ public class TrayCheckMenuItem extends TrayMenuItem {
     /* ---------------- Constructors ---------------- */
 
     public TrayCheckMenuItem() {
-        super("Check Item", null);
+        this("Check Item", null);
     }
 
     public TrayCheckMenuItem(String text) {
-        super(text, null);
+        this(text, null);
     }
 
     public TrayCheckMenuItem(String text, Image image) {
