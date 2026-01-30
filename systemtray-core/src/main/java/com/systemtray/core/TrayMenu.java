@@ -30,8 +30,8 @@ public class TrayMenu extends TrayMenuItem {
     public TrayMenu(String text, Image image, TrayMenuItem... items) {
         super(text, image);
 
-        if (getItems() != null) {
-            getItems().addAll(items);
+        if (items != null) {
+            this.items.addAll(items);
         }
     }
 
