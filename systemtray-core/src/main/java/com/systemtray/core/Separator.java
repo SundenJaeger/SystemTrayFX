@@ -4,7 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 
-public class Separator extends MenuItem {
+public class Separator extends TrayMenuItem {
     public Separator() {
         super("");
     }

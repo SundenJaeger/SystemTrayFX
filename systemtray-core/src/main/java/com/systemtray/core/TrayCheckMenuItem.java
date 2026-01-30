@@ -9,20 +9,20 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 
-public class CheckMenuItem extends MenuItem {
+public class TrayCheckMenuItem extends TrayMenuItem {
     private final BooleanProperty selected = new SimpleBooleanProperty(false);
 
     /* ---------------- Constructors ---------------- */
 
-    public CheckMenuItem() {
+    public TrayCheckMenuItem() {
         super("Check Item", null);
     }
 
-    public CheckMenuItem(String text) {
+    public TrayCheckMenuItem(String text) {
         super(text, null);
     }
 
-    public CheckMenuItem(String text, Image image) {
+    public TrayCheckMenuItem(String text, Image image) {
         super(text, image);
     }
 

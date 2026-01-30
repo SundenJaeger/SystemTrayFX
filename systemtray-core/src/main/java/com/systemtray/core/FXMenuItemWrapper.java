@@ -8,7 +8,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 
-public class FXMenuItemWrapper extends MenuItem {
+public class FXMenuItemWrapper extends TrayMenuItem {
     private final javafx.scene.control.MenuItem fxItem;
 
     public FXMenuItemWrapper(javafx.scene.control.MenuItem fxItem) {

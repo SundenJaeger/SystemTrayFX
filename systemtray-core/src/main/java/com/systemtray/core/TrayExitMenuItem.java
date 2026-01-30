@@ -3,8 +3,8 @@ package com.systemtray.core;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 
-public class ExitMenuItem extends MenuItem {
-    public ExitMenuItem() {
+public class TrayExitMenuItem extends TrayMenuItem {
+    public TrayExitMenuItem() {
         super("Exit");
         setOnAction(event -> {
             dispose();
@@ -12,7 +12,7 @@ public class ExitMenuItem extends MenuItem {
         });
     }
 
-    public ExitMenuItem(String text) {
+    public TrayExitMenuItem(String text) {
         super(text);
         setOnAction(event -> {
             dispose();
@@ -20,7 +20,7 @@ public class ExitMenuItem extends MenuItem {
         });
     }
 
-    public ExitMenuItem(String text, Image image) {
+    public TrayExitMenuItem(String text, Image image) {
         super(text, image);
         setOnAction(event -> {
             dispose();

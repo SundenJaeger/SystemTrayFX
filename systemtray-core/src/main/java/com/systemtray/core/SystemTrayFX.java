@@ -21,7 +21,7 @@ public class SystemTrayFX implements ISystemTray {
     private TrayItem trayItem;
     private TrayNotification trayNotification;
 
-    private final List<MenuItem> menuItems = new ArrayList<>();
+    private final List<TrayMenuItem> menuItems = new ArrayList<>();
     private final List<org.eclipse.swt.graphics.Image> swtImages = new ArrayList<>();
     private volatile boolean initialized = false;
 
@@ -68,7 +68,7 @@ public class SystemTrayFX implements ISystemTray {
     }
 
     @Override
-    public void addEntry(MenuItem... items) {
+    public void addEntry(TrayMenuItem... items) {
         if (!initialized) {
             this.menuItems.addAll(List.of(items));
         } else {

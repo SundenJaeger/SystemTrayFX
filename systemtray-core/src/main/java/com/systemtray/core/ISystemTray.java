@@ -1,7 +1,7 @@
 package com.systemtray.core;
 
 interface ISystemTray {
-    void addEntry(MenuItem... items);
+    void addEntry(TrayMenuItem... items);
 
     void show();
 

@@ -9,7 +9,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 
-public class MenuItem {
+public class TrayMenuItem {
     private final StringProperty text = new SimpleStringProperty();
     private final ObjectProperty<Image> image = new SimpleObjectProperty<>();
     private final BooleanProperty disable = new SimpleBooleanProperty(false);
@@ -19,15 +19,15 @@ public class MenuItem {
 
     /* ---------------- Constructors ---------------- */
 
-    public MenuItem() {
+    public TrayMenuItem() {
         this("Item", null);
     }
 
-    public MenuItem(String text) {
+    public TrayMenuItem(String text) {
         this(text, null);
     }
 
-    public MenuItem(String text, Image image) {
+    public TrayMenuItem(String text, Image image) {
         this.text.set(text);
         this.image.set(image);
     }
@@ -85,7 +85,7 @@ public class MenuItem {
             onAction = new ObjectPropertyBase<>() {
                 @Override
                 public Object getBean() {
-                    return MenuItem.this;
+                    return TrayMenuItem.this;
                 }
 
                 @Override
