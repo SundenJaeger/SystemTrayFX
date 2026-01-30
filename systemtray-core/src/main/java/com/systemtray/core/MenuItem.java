@@ -15,6 +15,7 @@ public class MenuItem {
     private final BooleanProperty disable = new SimpleBooleanProperty(false);
 
     private ObjectProperty<EventHandler<ActionEvent>> onAction;
+    private SystemTrayFX ctx;
 
     /* ---------------- Constructors ---------------- */
 
@@ -97,8 +98,9 @@ public class MenuItem {
     }
 
     protected void create(Display display, Menu menu, SystemTrayFX ctx) {
-        org.eclipse.swt.widgets.MenuItem menuItem = new org.eclipse.swt.widgets.MenuItem(menu, SWT.PUSH);
+        this.ctx = ctx;
 
+        org.eclipse.swt.widgets.MenuItem menuItem = new org.eclipse.swt.widgets.MenuItem(menu, SWT.PUSH);
         menuItem.setText(text.get());
 
         if (image.get() != null) {
@@ -134,5 +136,9 @@ public class MenuItem {
                 display.asyncExec(() -> ctx.createImage(Utils.toSWTImage(newValue)));
             }
         });
+    }
+
+    protected void dispose() {
+        ctx.dispose();
     }
 }
