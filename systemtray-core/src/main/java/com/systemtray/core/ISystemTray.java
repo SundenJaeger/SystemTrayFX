@@ -3,8 +3,6 @@ package com.systemtray.core;
 interface ISystemTray {
     void addEntry(TrayMenuItem... items);
 
-    void show();
-
     void dispose();
 
     void showNotification(String title, String message, NotificationIcon icon, Runnable action);
