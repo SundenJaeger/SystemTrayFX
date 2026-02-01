@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 
 public class TrayMenuItem {
     private final StringProperty text = new SimpleStringProperty();
@@ -97,18 +98,31 @@ public class TrayMenuItem {
         return onAction;
     }
 
+    /* ---------------- Protected Methods ---------------- */
+
     protected void create(Display display, Menu menu, SystemTrayFX ctx) {
         this.ctx = ctx;
 
-        org.eclipse.swt.widgets.MenuItem menuItem = new org.eclipse.swt.widgets.MenuItem(menu, SWT.PUSH);
-        menuItem.setText(text.get());
+        org.eclipse.swt.widgets.MenuItem menuItem = new org.eclipse.swt.widgets.MenuItem(menu, getSWTStyle());
+        applyInitialState(menuItem, ctx);
+        installBaseListeners(display, menuItem, ctx);
+        installSubclassListeners(display, menuItem, ctx);
+    }
 
-        if (image.get() != null) {
-            menuItem.setImage(ctx.createImage(Utils.toSWTImage(image.get())));
+    protected int getSWTStyle() {
+        return SWT.PUSH;
+    }
+
+    protected void applyInitialState(MenuItem menuItem, SystemTrayFX ctx) {
+        menuItem.setText(getText());
+
+        if (getImage() != null) {
+            menuItem.setImage(ctx.createImage(Utils.toSWTImage(getImage())));
         }
+        menuItem.setEnabled(!isDisabled());
+    }
 
-        menuItem.setEnabled(!disable.get());
-
+    protected void installBaseListeners(Display display, MenuItem menuItem, SystemTrayFX ctx) {
         if (getOnAction() != null) {
             menuItem.addListener(SWT.Selection, event -> Platform.runLater(() -> getOnAction().handle(new ActionEvent(this, null))));
         }
@@ -136,6 +150,13 @@ public class TrayMenuItem {
                 display.asyncExec(() -> ctx.createImage(Utils.toSWTImage(newValue)));
             }
         });
+    }
+
+    protected void installSubclassListeners(
+            Display display,
+            org.eclipse.swt.widgets.MenuItem menuItem,
+            SystemTrayFX ctx) {
+        // subclasses override
     }
 
     protected void dispose() {

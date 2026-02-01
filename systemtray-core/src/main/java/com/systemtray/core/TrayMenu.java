@@ -16,6 +16,8 @@ public class TrayMenu extends TrayMenuItem {
 
     private final ObservableList<TrayMenuItem> items = FXCollections.observableArrayList();
 
+    /* ---------------- Constructors ---------------- */
+
     public TrayMenu() {
         this("Menu", null);
     }
@@ -49,8 +51,17 @@ public class TrayMenu extends TrayMenuItem {
         });
     }
 
+    /* ---------------- Getters/Setters ---------------- */
+
     public ObservableList<TrayMenuItem> getItems() {
         return items;
+    }
+
+    /* ---------------- Protected Methods ---------------- */
+
+    @Override
+    protected int getSWTStyle() {
+        return SWT.CASCADE;
     }
 
     @Override
@@ -59,36 +70,9 @@ public class TrayMenu extends TrayMenuItem {
         this.ctx = ctx;
 
         MenuItem root = new MenuItem(menu, SWT.CASCADE);
-        root.setText(getText());
-        root.setEnabled(!isDisabled());
 
-        if (getImage() != null) {
-            root.setImage(ctx.createImage(Utils.toSWTImage(getImage())));
-        }
-
-        textProperty().addListener((observable, oldValue, newValue) -> {
-            if (display == null || display.isDisposed()) return;
-
-            if (!root.isDisposed()) {
-                display.asyncExec(() -> root.setText(newValue));
-            }
-        });
-
-        disableProperty().addListener((observable, oldValue, newValue) -> {
-            if (display == null || display.isDisposed()) return;
-
-            if (!root.isDisposed()) {
-                display.asyncExec(() -> root.setEnabled(!newValue));
-            }
-        });
-
-        imageProperty().addListener((observable, oldValue, newValue) -> {
-            if (display == null || display.isDisposed()) return;
-
-            if (!root.isDisposed()) {
-                display.asyncExec(() -> root.setImage(ctx.createImage(Utils.toSWTImage(newValue))));
-            }
-        });
+        applyInitialState(root, ctx);
+        installBaseListeners(display, root, ctx);
 
         subMenu = new Menu(menu);
         root.setMenu(subMenu);
