@@ -10,7 +10,7 @@ public class Separator extends TrayMenuItem {
     }
 
     @Override
-    protected void create(Display display, Menu menu, SystemTrayFX ctx) {
-        new org.eclipse.swt.widgets.MenuItem(menu, SWT.SEPARATOR);
+    protected int getSWTStyle() {
+        return SWT.SEPARATOR;
     }
 }
