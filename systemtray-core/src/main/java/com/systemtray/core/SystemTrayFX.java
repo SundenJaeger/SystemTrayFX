@@ -37,8 +37,6 @@ public class SystemTrayFX implements ISystemTray {
 
     private final StringProperty titleProperty = new SimpleStringProperty();
 
-    private static final int NOTIFICATION_TIMEOUT = 3000;
-
     public SystemTrayFX(Stage stage, String title, Image trayIcon) {
         this(stage, title, trayIcon, false);
     }
@@ -131,12 +129,6 @@ public class SystemTrayFX implements ISystemTray {
 
             display.dispose();
         });
-    }
-
-    @Override
-    public void showNotification(String title, String message, NotificationIcon icon, Runnable action) {
-        if (trayNotification == null) return;
-        trayNotification.show(title, message, NOTIFICATION_TIMEOUT, icon, action);
     }
 
     protected org.eclipse.swt.graphics.Image createImage(ImageData imageData) {

@@ -4,10 +4,4 @@ interface ISystemTray {
     void addEntry(TrayMenuItem... items);
 
     void dispose();
-
-    void showNotification(String title, String message, NotificationIcon icon, Runnable action);
-
-    default void showNotification(String title, String message, NotificationIcon icon) {
-        showNotification(title, message, icon, null);
-    }
 }
