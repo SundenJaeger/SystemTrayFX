@@ -128,6 +128,8 @@ public class SystemTrayFX implements ISystemTray {
             if (trayNotification != null) trayNotification.dispose();
 
             display.dispose();
+
+            Notification.dispose();
         });
     }
 
@@ -167,6 +169,7 @@ public class SystemTrayFX implements ISystemTray {
             trayItem.addListener(SWT.MenuDetect, e -> menu.setVisible(true));
 
             trayNotification = new TrayNotification(display, shell, trayItem);
+            Notification.register(trayNotification);
 
             isInitialized = true;
             TrayMenuItem[] pending;
