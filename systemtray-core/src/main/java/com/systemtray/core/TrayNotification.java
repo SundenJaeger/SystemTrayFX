@@ -16,6 +16,7 @@ final class TrayNotification {
 
     private ToolTip toolTip;
     private NotificationIcon currentIcon = NotificationIcon.NONE;
+    private SelectionAdapter selectionAdapter;
 
     TrayNotification(Display display, Shell shell, TrayItem trayItem) {
         this.display = display;
@@ -27,6 +28,13 @@ final class TrayNotification {
         if (display == null || display.isDisposed()) return;
 
         display.asyncExec(() -> {
+            // Remove old listener regardless of icon change
+            if (toolTip != null && !toolTip.isDisposed() && selectionAdapter != null) {
+                toolTip.removeSelectionListener(selectionAdapter);
+                selectionAdapter = null;
+            }
+
+            // Recreate tooltip if icon type changed
             if (toolTip != null && !toolTip.isDisposed() && icon != currentIcon) {
                 toolTip.dispose();
                 toolTip = null;
@@ -49,18 +57,19 @@ final class TrayNotification {
             toolTip.setText(title);
             toolTip.setMessage(message);
             toolTip.setVisible(true);
-            toolTip.addSelectionListener(new SelectionAdapter() {
+            selectionAdapter = new SelectionAdapter() {
                 @Override
                 public void widgetSelected(SelectionEvent e) {
                     if (action != null) {
                         Platform.runLater(action);
                     }
                 }
-            });
+            };
+            toolTip.addSelectionListener(selectionAdapter);
 
             if (timeout > 0) {
                 display.timerExec(timeout, () -> {
-                    if (!toolTip.isDisposed()) {
+                    if (toolTip != null && !toolTip.isDisposed()) {
                         toolTip.setVisible(false);
                     }
                 });
@@ -73,8 +82,19 @@ final class TrayNotification {
 //    }
 
     public void dispose() {
-        if (toolTip != null && !toolTip.isDisposed()) {
-            toolTip.dispose();
+        if (display != null && !display.isDisposed()) {
+            display.asyncExec(() -> {
+                if (selectionAdapter != null && toolTip != null && !toolTip.isDisposed()) {
+                    toolTip.removeSelectionListener(selectionAdapter);
+                }
+                selectionAdapter = null;
+
+                if (toolTip != null && !toolTip.isDisposed()) {
+                    toolTip.dispose();
+                }
+                toolTip = null;
+                currentIcon = NotificationIcon.NONE;
+            });
         }
     }
 }
