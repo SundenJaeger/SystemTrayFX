@@ -23,15 +23,15 @@ public final class Notification {
     }
 
     public static void info(String title, String message) {
-        build(title, message, NotificationIcon.INFORMATION);
+        build(title, message, NotificationType.INFORMATION);
     }
 
     public static void warn(String title, String message) {
-        build(title, message, NotificationIcon.WARNING);
+        build(title, message, NotificationType.WARNING);
     }
 
     public static void error(String title, String message) {
-        build(title, message, NotificationIcon.ERROR);
+        build(title, message, NotificationType.ERROR);
     }
 
     public static void dispose() {
@@ -42,7 +42,7 @@ public final class Notification {
         pending.clear();
     }
 
-    private static void build(String title, String message, NotificationIcon type) {
+    private static void build(String title, String message, NotificationType type) {
         Objects.requireNonNull(title, "Title cannot be null");
         Objects.requireNonNull(message, "Message cannot be null");
 
@@ -63,7 +63,7 @@ public final class Notification {
         private String title;
         private String message;
         private int timeout = DEFAULT_TIMEOUT;
-        private NotificationIcon type = NotificationIcon.NONE;
+        private NotificationType type = NotificationType.NONE;
         private Runnable action;
 
         public Builder title(String title) {
@@ -81,7 +81,7 @@ public final class Notification {
             return this;
         }
 
-        public Builder type(NotificationIcon type) {
+        public Builder type(NotificationType type) {
             this.type = type;
             return this;
         }

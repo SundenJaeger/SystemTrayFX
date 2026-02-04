@@ -15,7 +15,7 @@ final class TrayNotification {
     private final TrayItem trayItem;
 
     private ToolTip toolTip;
-    private NotificationIcon currentIcon = NotificationIcon.NONE;
+    private NotificationType currentIcon = NotificationType.NONE;
     private SelectionAdapter selectionAdapter;
 
     TrayNotification(Display display, Shell shell, TrayItem trayItem) {
@@ -24,7 +24,7 @@ final class TrayNotification {
         this.trayItem = trayItem;
     }
 
-    public void show(String title, String message, int timeout, NotificationIcon icon, Runnable action) {
+    public void show(String title, String message, int timeout, NotificationType icon, Runnable action) {
         if (display == null || display.isDisposed()) return;
 
         display.asyncExec(() -> {
@@ -93,7 +93,7 @@ final class TrayNotification {
                     toolTip.dispose();
                 }
                 toolTip = null;
-                currentIcon = NotificationIcon.NONE;
+                currentIcon = NotificationType.NONE;
             });
         }
     }

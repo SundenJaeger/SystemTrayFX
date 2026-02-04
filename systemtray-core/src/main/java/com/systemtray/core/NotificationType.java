@@ -1,6 +1,6 @@
 package com.systemtray.core;
 
-public enum NotificationIcon {
+public enum NotificationType {
     NONE,
     INFORMATION,
     WARNING,
