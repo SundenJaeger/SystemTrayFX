@@ -9,12 +9,18 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TrayMenu extends TrayMenuItem {
     private Display display;
     private Menu subMenu;
     private SystemTrayFX ctx;
 
     private final ObservableList<TrayMenuItem> items = FXCollections.observableArrayList();
+
+    private final List<TrayMenuItem> pendingItems = new ArrayList<>();
+    private boolean isInitialized = false;
 
     /* ---------------- Constructors ---------------- */
 
@@ -44,8 +50,21 @@ public class TrayMenu extends TrayMenuItem {
         this.items.addListener((ListChangeListener<TrayMenuItem>) change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
-                    display.asyncExec(() -> change.getAddedSubList()
-                            .forEach(trayMenuItem -> trayMenuItem.create(display, subMenu, ctx)));
+                    List<TrayMenuItem> added = List.copyOf(change.getAddedSubList());
+
+                    if (!isInitialized) {
+                        pendingItems.addAll(added);
+                    } else {
+                        display.asyncExec(() -> added.forEach(item -> item.create(display, subMenu, ctx)));
+                    }
+                }
+
+                if (change.wasRemoved()) {
+                    List<TrayMenuItem> removed = List.copyOf(change.getRemoved());
+
+                    if (isInitialized) {
+                        display.asyncExec(() -> removed.forEach(TrayMenuItem::dispose));
+                    }
                 }
             }
         });
@@ -77,6 +96,8 @@ public class TrayMenu extends TrayMenuItem {
         subMenu = new Menu(menu);
         root.setMenu(subMenu);
 
-        items.forEach(trayMenuItem -> trayMenuItem.create(display, subMenu, ctx));
+        isInitialized = true;
+        pendingItems.forEach(item -> item.create(display, subMenu, ctx));
+        pendingItems.clear();
     }
 }

@@ -71,10 +71,21 @@ public class SystemTrayFX implements ISystemTray {
         items.addListener((ListChangeListener<TrayMenuItem>) change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
-                    display.asyncExec(() -> change.getAddedSubList().forEach(trayMenuItem -> trayMenuItem.create(display, menu, SystemTrayFX.this)));
+                    List<TrayMenuItem> added = List.copyOf(change.getAddedSubList());
+
+                    if (!isInitialized) {
+                        pendingItems.offer(added.toArray(new TrayMenuItem[0]));
+                    } else {
+                        display.asyncExec(() -> added.forEach(item -> item.create(display, menu, SystemTrayFX.this)));
+                    }
                 }
+
                 if (change.wasRemoved()) {
-                    display.asyncExec(() -> change.getRemoved().forEach(TrayMenuItem::dispose));
+                    List<TrayMenuItem> removed = List.copyOf(change.getRemoved());
+
+                    if (isInitialized) {
+                        display.asyncExec(() -> removed.forEach(TrayMenuItem::dispose));
+                    }
                 }
             }
         });
