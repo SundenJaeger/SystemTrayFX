@@ -90,7 +90,9 @@ public class FXMenuItemWrapper extends TrayMenuItem {
 
     /* ---------------- Fields ---------------- */
 
-    /** The wrapped JavaFX menu item */
+    /**
+     * The wrapped JavaFX menu item
+     */
     private final javafx.scene.control.MenuItem fxItem;
 
     /* ---------------- Constructors ---------------- */
@@ -135,8 +137,8 @@ public class FXMenuItemWrapper extends TrayMenuItem {
      * Creates the SWT menu item and sets up property synchronization.
      *
      * @param display the SWT display
-     * @param menu the parent menu
-     * @param ctx the system tray context
+     * @param menu    the parent menu
+     * @param ctx     the system tray context
      */
     @Override
     protected void create(Display display, Menu menu, SystemTrayFX ctx) {
@@ -146,6 +148,7 @@ public class FXMenuItemWrapper extends TrayMenuItem {
 
         setText(text);
         setDisable(fxItem.isDisable());
+        setOnAction(fxItem.getOnAction());
 
         applyInitialState(menuItem, ctx);
         installBaseListeners(display, menuItem, ctx);
@@ -171,9 +174,9 @@ public class FXMenuItemWrapper extends TrayMenuItem {
     /**
      * Installs type-specific listeners based on the JavaFX item type.
      *
-     * @param display the SWT display
+     * @param display  the SWT display
      * @param menuItem the SWT menu item
-     * @param ctx the system tray context
+     * @param ctx      the system tray context
      */
     @Override
     protected void installSubclassListeners(Display display, MenuItem menuItem, SystemTrayFX ctx) {
