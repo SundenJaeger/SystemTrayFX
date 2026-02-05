@@ -81,28 +81,48 @@ import java.util.List;
  */
 public class TrayMenu extends TrayMenuItem {
 
+    /* ---------------- Constants ---------------- */
+
+    /**
+     * Fallback text used when a menu item text is null, empty, or blank.
+     * Prevents tray items from rendering with an invisible label
+     */
+    private static final String DEFAULT_MENU_TEXT = "Menu";
+
     /* ---------------- Constructors ---------------- */
 
-    /** The SWT display for executing operations on the correct thread */
+    /**
+     * The SWT display for executing operations on the correct thread
+     */
     private Display display;
 
-    /** The SWT submenu containing child items */
+    /**
+     * The SWT submenu containing child items
+     */
     private Menu subMenu;
 
-    /** Reference to the parent system tray context */
+    /**
+     * Reference to the parent system tray context
+     */
     private SystemTrayFX ctx;
 
     /* ---------------- Collections ---------------- */
 
-    /** Observable list of items in the submenu */
+    /**
+     * Observable list of items in the submenu
+     */
     private final ObservableList<TrayMenuItem> items = FXCollections.observableArrayList();
 
-    /** Queue for items added before the submenu is initialized */
+    /**
+     * Queue for items added before the submenu is initialized
+     */
     private final List<TrayMenuItem> pendingItems = new ArrayList<>();
 
     /* ---------------- States ---------------- */
 
-    /** Flag indicating whether the submenu has been created */
+    /**
+     * Flag indicating whether the submenu has been created
+     */
     private boolean isInitialized = false;
 
     /* ---------------- Constructors ---------------- */
@@ -111,7 +131,7 @@ public class TrayMenu extends TrayMenuItem {
      * Creates an empty submenu with default text "Menu" and no icon.
      */
     public TrayMenu() {
-        this("Menu", null);
+        this(DEFAULT_MENU_TEXT, null);
     }
 
     /**
@@ -120,7 +140,7 @@ public class TrayMenu extends TrayMenuItem {
      * @param items the initial items to add to the submenu
      */
     public TrayMenu(TrayMenuItem... items) {
-        this("Menu", null, items);
+        this(DEFAULT_MENU_TEXT, null, items);
     }
 
     /**
@@ -135,7 +155,7 @@ public class TrayMenu extends TrayMenuItem {
     /**
      * Creates an empty submenu with the specified text and icon.
      *
-     * @param text the text to display on the submenu item
+     * @param text  the text to display on the submenu item
      * @param image the icon to display
      */
     public TrayMenu(String text, Image image) {
@@ -145,12 +165,12 @@ public class TrayMenu extends TrayMenuItem {
     /**
      * Creates a submenu with the specified text, icon, and initial items.
      *
-     * @param text the text to display on the submenu item
+     * @param text  the text to display on the submenu item
      * @param image the icon to display
      * @param items the initial items to add to the submenu
      */
     public TrayMenu(String text, Image image, TrayMenuItem... items) {
-        super(text, image);
+        super(Utils.safeText(DEFAULT_MENU_TEXT, text), image);
 
         if (items != null) {
             this.items.addAll(items);
@@ -205,6 +225,11 @@ public class TrayMenu extends TrayMenuItem {
         return items;
     }
 
+    @Override
+    public void setText(String text) {
+        super.setText(Utils.safeText(DEFAULT_MENU_TEXT, text));
+    }
+
     /* ---------------- Protected Methods ---------------- */
 
     /**
@@ -224,8 +249,8 @@ public class TrayMenu extends TrayMenuItem {
      * any items that were added before initialization.
      *
      * @param display the SWT display
-     * @param menu the parent menu
-     * @param ctx the system tray context
+     * @param menu    the parent menu
+     * @param ctx     the system tray context
      */
     @Override
     protected void create(Display display, Menu menu, SystemTrayFX ctx) {

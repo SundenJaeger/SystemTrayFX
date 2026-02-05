@@ -17,9 +17,6 @@
 package com.systemtray.core;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import org.eclipse.swt.SWT;
@@ -142,11 +139,9 @@ public class FXMenuItemWrapper extends TrayMenuItem {
      */
     @Override
     protected void create(Display display, Menu menu, SystemTrayFX ctx) {
-        final String text = fxItem.getText() != null ? fxItem.getText() : getText();
-
         org.eclipse.swt.widgets.MenuItem menuItem = new MenuItem(menu, getSWTStyle());
 
-        setText(text);
+        setText(fxItem.getText());
         setDisable(fxItem.isDisable());
         setOnAction(fxItem.getOnAction());
 

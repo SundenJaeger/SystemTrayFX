@@ -64,13 +64,21 @@ import org.eclipse.swt.widgets.MenuItem;
  */
 public class TrayCheckMenuItem extends TrayMenuItem {
 
+    /* ---------------- Constants ---------------- */
+
+    /**
+     * Fallback text used when a menu item text is null, empty, or blank.
+     * Prevents tray items from rendering with an invisible label
+     */
+    private static final String DEFAULT_CHECK_TEXT = "Check Item";
+
     /* ---------------- Constructors ---------------- */
 
     /**
      * Creates a checkbox menu item with default text "Check Item" and no icon.
      */
     public TrayCheckMenuItem() {
-        this("Check Item", null);
+        this(DEFAULT_CHECK_TEXT, null);
     }
 
     /**
@@ -85,11 +93,11 @@ public class TrayCheckMenuItem extends TrayMenuItem {
     /**
      * Creates a checkbox menu item with the specified text and icon.
      *
-     * @param text the text to display
+     * @param text  the text to display
      * @param image the icon to display
      */
     public TrayCheckMenuItem(String text, Image image) {
-        super(text, image);
+        super(Utils.safeText(DEFAULT_CHECK_TEXT, text), image);
     }
 
     /* ---------------- Getters/Setters ---------------- */
@@ -110,6 +118,11 @@ public class TrayCheckMenuItem extends TrayMenuItem {
      */
     public void setSelected(boolean selected) {
         this.selected.set(selected);
+    }
+
+    @Override
+    public void setText(String text) {
+        super.setText(Utils.safeText(DEFAULT_CHECK_TEXT, text));
     }
 
     /* ---------------- Properties ---------------- */
@@ -152,9 +165,9 @@ public class TrayCheckMenuItem extends TrayMenuItem {
      *   <li>User clicks on the SWT widget update the JavaFX property</li>
      * </ul>
      *
-     * @param display the SWT display
+     * @param display  the SWT display
      * @param menuItem the SWT menu item
-     * @param ctx the system tray context
+     * @param ctx      the system tray context
      */
     @Override
     protected void installSubclassListeners(Display display, MenuItem menuItem, SystemTrayFX ctx) {

@@ -72,6 +72,10 @@ public class TrayExitMenuItem extends TrayMenuItem {
 
     /* ---------------- Constants ---------------- */
 
+    /**
+     * Fallback text used when a menu item text is null, empty, or blank.
+     * Prevents tray items from rendering with an invisible label
+     */
     private static final String DEFAULT_EXIT_TEXT = "Exit";
 
     /* ---------------- Constructors ---------------- */
@@ -104,14 +108,19 @@ public class TrayExitMenuItem extends TrayMenuItem {
      * <p>The action is automatically configured to dispose of system tray resources
      * and exit the JavaFX application.
      *
-     * @param text the text to display on the menu item
+     * @param text  the text to display on the menu item
      * @param image the icon to display next to the text (may be null for no icon)
      */
     public TrayExitMenuItem(String text, Image image) {
-        super(text, image);
+        super(Utils.safeText(DEFAULT_EXIT_TEXT, text), image);
         setOnAction(event -> {
             dispose();
             Platform.exit();
         });
+    }
+
+    @Override
+    public void setText(String text) {
+        super.setText(Utils.safeText(DEFAULT_EXIT_TEXT, text));
     }
 }

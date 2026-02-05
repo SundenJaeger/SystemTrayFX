@@ -57,7 +57,19 @@ import org.eclipse.swt.widgets.MenuItem;
  */
 public class TrayMenuItem {
 
-    /** Reference to the parent system tray context */
+    /* ---------------- Constants ---------------- */
+
+    /**
+     * Fallback text used when a menu item text is null, empty, or blank.
+     * Prevents tray items from rendering with an invisible label
+     */
+    private static final String DEFAULT_TEXT = "Item";
+
+    /* ---------------- SWT Components ---------------- */
+
+    /**
+     * Reference to the parent system tray context
+     */
     private SystemTrayFX ctx;
 
     /* ---------------- Constructors ---------------- */
@@ -66,7 +78,7 @@ public class TrayMenuItem {
      * Creates a menu item with default text "Item" and no icon.
      */
     public TrayMenuItem() {
-        this("Item", null);
+        this(DEFAULT_TEXT, null);
     }
 
     /**
@@ -81,11 +93,11 @@ public class TrayMenuItem {
     /**
      * Creates a menu item with the specified text and icon.
      *
-     * @param text the text to display
+     * @param text  the text to display
      * @param image the icon to display
      */
     public TrayMenuItem(String text, Image image) {
-        this.text.set(text);
+        setText(text);
         this.image.set(image);
     }
 
@@ -106,7 +118,7 @@ public class TrayMenuItem {
      * @param text the new text
      */
     public void setText(String text) {
-        this.text.set(text);
+        this.text.set(Utils.safeText(DEFAULT_TEXT, text));
     }
 
     /**
@@ -228,8 +240,8 @@ public class TrayMenuItem {
      * This method is called internally by the system tray framework.
      *
      * @param display the SWT display
-     * @param menu the parent menu
-     * @param ctx the system tray context
+     * @param menu    the parent menu
+     * @param ctx     the system tray context
      */
     protected void create(Display display, Menu menu, SystemTrayFX ctx) {
         this.ctx = ctx;
@@ -254,10 +266,10 @@ public class TrayMenuItem {
      * Applies the initial state (text, icon, enabled) to the SWT menu item.
      *
      * @param menuItem the SWT menu item
-     * @param ctx the system tray context
+     * @param ctx      the system tray context
      */
     protected void applyInitialState(MenuItem menuItem, SystemTrayFX ctx) {
-        menuItem.setText(getText());
+        menuItem.setText(Utils.safeText(DEFAULT_TEXT, getText()));
 
         if (getImage() != null) {
             menuItem.setImage(ctx.createImage(Utils.toSWTImage(getImage())));
@@ -269,9 +281,9 @@ public class TrayMenuItem {
      * Installs listeners to synchronize JavaFX properties with the SWT widget.
      * This ensures changes to JavaFX properties are reflected in the system tray.
      *
-     * @param display the SWT display
+     * @param display  the SWT display
      * @param menuItem the SWT menu item
-     * @param ctx the system tray context
+     * @param ctx      the system tray context
      */
     protected void installBaseListeners(Display display, MenuItem menuItem, SystemTrayFX ctx) {
         if (getOnAction() != null) {
@@ -282,7 +294,7 @@ public class TrayMenuItem {
             if (display == null || display.isDisposed()) return;
 
             if (!menuItem.isDisposed()) {
-                display.asyncExec(() -> menuItem.setText(newValue));
+                display.asyncExec(() -> menuItem.setText(Utils.safeText(DEFAULT_TEXT, newValue)));
             }
         });
 
@@ -307,9 +319,9 @@ public class TrayMenuItem {
      * Hook for subclasses to install additional listeners.
      * Called after base listeners are installed.
      *
-     * @param display the SWT display
+     * @param display  the SWT display
      * @param menuItem the SWT menu item
-     * @param ctx the system tray context
+     * @param ctx      the system tray context
      */
     protected void installSubclassListeners(
             Display display,
