@@ -9,14 +9,14 @@ import org.eclipse.swt.graphics.RGB;
 import java.awt.image.BufferedImage;
 
 /**
- * Utility class for image conversion operations between JavaFX, Swing, and SWT formats.
+ * Utility class providing helper methods for system tray integration.
  *
- * <p>This class provides helper methods to convert images from JavaFX's {@link Image} format
- * and Java AWT's {@link BufferedImage} format to SWT's {@link ImageData} format, which is
- * required for displaying images in SWT-based system tray icons.
+ * <p>This class primarily contains image conversion utilities for converting
+ * JavaFX and AWT images into SWT {@link ImageData} for use in system tray
+ * components. It also includes small, UI-related helper methods used across
+ * the tray framework.
  *
  * <p>This is a utility class with static methods only and cannot be instantiated.
- *
  */
 final class Utils {
 
@@ -91,5 +91,17 @@ final class Utils {
         }
 
         return imageData;
+    }
+
+    /**
+     * Returns a safe UI text value, falling back to the given default when the
+     * provided text is null, empty, or blank.
+     *
+     * @param defaultText the fallback text to use
+     * @param text        the candidate text
+     * @return a non-null, non-blank text value
+     */
+    static String safeText(String defaultText, String text) {
+        return (text == null || text.isBlank()) ? defaultText : text;
     }
 }
