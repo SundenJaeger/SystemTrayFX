@@ -102,6 +102,6 @@ final class Utils {
      * @return a non-null, non-blank text value
      */
     static String safeText(String defaultText, String text) {
-        return (text == null || text.isBlank()) ? defaultText : text;
+        return (text == null || text.isBlank()) ? defaultText : text.strip();
     }
 }
