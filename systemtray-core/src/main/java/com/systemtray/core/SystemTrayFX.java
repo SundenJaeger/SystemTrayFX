@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2026 Rentoki
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.systemtray.core;
 
 import javafx.application.Platform;
@@ -18,29 +34,173 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
+/**
+ * A JavaFX-based system tray implementation that integrates with the native system tray
+ * using SWT (Standard Widget Toolkit).
+ *
+ * <p>The system tray runs on a separate SWT thread to prevent blocking the JavaFX
+ * application thread.
+ *
+ * <p><strong>Basic Usage Example:</strong>
+ * <pre>{@code
+ * // Create system tray
+ * Image trayIcon = new Image(getClass().getResourceAsStream("/icon.png"));
+ * SystemTrayFX tray = new SystemTrayFX(stage, "My Application", trayIcon);
+ *
+ * // Add menu items using getItems()
+ * tray.getItems().add(new TrayMenuItem("Open", e -> stage.show()));
+ * tray.getItems().add(new TrayMenuItem("Settings", e -> openSettings()));
+ * tray.getItems().addAll(
+ *     new TraySeparatorMenuItem(),
+ *     new TrayExitMenuItem("Exit")
+ * );
+ *
+ * // Or add menu items using addEntry()
+ * tray.addEntry(new TrayMenuItem("Open", e -> stage.show()));
+ * tray.addEntry(new TrayMenuItem("Settings", e -> openSettings()));
+ * tray.addEntry(
+ *     new TraySeparatorMenuItem(),
+ *     new TrayExitMenuItem("Exit")
+ * );
+ * }</pre>
+ *
+ * <p><strong>Minimize to Tray Example:</strong>
+ * <pre>{@code
+ * // Create system tray with minimize-to-tray enabled
+ * SystemTrayFX tray = new SystemTrayFX(stage, "My Application", trayIcon, true);
+ *
+ * // Add menu items (exit item is essential for proper cleanup)
+ * tray.getItems().addAll(
+ *     new TrayMenuItem("Show", e -> {
+ *         stage.show();
+ *         stage.toFront();
+ *     }),
+ *     new TraySeparatorMenuItem(),
+ *     new TrayExitMenuItem("Exit")
+ * );
+ *
+ * // Alternative using addEntry()
+ * tray.addEntry(
+ *     new TrayMenuItem("Show", e -> {
+ *         stage.show();
+ *         stage.toFront();
+ *     }),
+ *     new TraySeparatorMenuItem(),
+ *     new TrayExitMenuItem("Exit")
+ * );
+ * }</pre>
+ * <p><strong>Menu Items with Icons:</strong>
+ * <pre>{@code
+ * Image openIcon = new Image(getClass().getResourceAsStream("/open.png"));
+ * Image settingsIcon = new Image(getClass().getResourceAsStream("/settings.png"));
+ *
+ * tray.addEntry(
+ *     new TrayMenuItem("Open", openIcon, e -> stage.show()),
+ *     new TrayMenuItem("Settings", settingsIcon, e -> openSettings()),
+ *     new TrayExitMenuItem("Exit")
+ * );
+ * }</pre>
+ * @see ISystemTray
+ * @see TrayMenuItem
+ * @see TrayExitMenuItem
+ * @see Notification
+ */
 public class SystemTrayFX implements ISystemTray {
+
+    /* ---------------- SWT Components ---------------- */
+
     private Display display;
     private Shell shell;
     private Menu menu;
     private TrayItem trayItem;
+
+    /** Handler for tray notifications */
     private TrayNotification trayNotification;
 
+    /* ---------------- Collections ---------------- */
+
+    /** Observable list of menu items displayed in the tray context menu */
     private final ObservableList<TrayMenuItem> items = FXCollections.observableArrayList();
+
+    /** List of SWT images that need to be disposed when the tray is closed */
     private final List<org.eclipse.swt.graphics.Image> swtImages = new ArrayList<>();
 
+    /** Queue for menu items added before the SWT thread is initialized */
     private final Queue<TrayMenuItem[]> pendingItems = new ConcurrentLinkedDeque<>();
+
+    /* ---------------- State Flags ---------------- */
+
+    /** Flag indicating whether the SWT thread has been initialized */
     private volatile boolean isInitialized = false;
 
+    /* ---------------- JavaFX Components ---------------- */
+
+    /** The JavaFX stage associated with this system tray */
     private final Stage stage;
+
+    /** The icon image displayed in the system tray */
     private final Image trayIcon;
+
+    /** Whether the application should minimize to tray instead of closing */
     private final boolean isMinimizeToTray;
 
+    /** Observable property for the tray icon tooltip text */
     private final StringProperty titleProperty = new SimpleStringProperty();
 
+    /* ---------------- Constructors ---------------- */
+
+    /**
+     * Creates a system tray icon with the specified configuration.
+     * The application will close normally when the window is closed.
+     *
+     * @param stage    the JavaFX stage to associate with this system tray
+     * @param title    the tooltip text displayed when hovering over the tray icon
+     * @param trayIcon the icon image to display in the system tray
+     */
     public SystemTrayFX(Stage stage, String title, Image trayIcon) {
         this(stage, title, trayIcon, false);
     }
 
+    /**
+     * Creates a system tray icon with the specified configuration.
+     *
+     * <p><strong>Important:</strong> When using {@code isMinimizeToTray = true}, the application
+     * will not exit automatically when the window is closed. To ensure proper cleanup of system
+     * tray resources, you must either:
+     * <ul>
+     *   <li>Add a {@link TrayExitMenuItem} to the tray menu (recommended)</li>
+     *   <li>Call {@link #dispose()} manually in a shutdown hook or exit handler</li>
+     * </ul>
+     *
+     * <p><strong>Example with TrayExitMenuItem using getItems():</strong>
+     * <pre>{@code
+     * SystemTrayFX tray = new SystemTrayFX(stage, "My App", icon, true);
+     * tray.getItems().add(new TrayExitMenuItem("Exit"));
+     * }</pre>
+     *
+     * <p><strong>Example with TrayExitMenuItem using addEntry():</strong>
+     * <pre>{@code
+     * SystemTrayFX tray = new SystemTrayFX(stage, "My App", icon, true);
+     * tray.addEntry(new TrayExitMenuItem("Exit"));
+     * }</pre>
+     *
+     * <p><strong>Example with shutdown hook:</strong>
+     * <pre>{@code
+     * SystemTrayFX tray = new SystemTrayFX(stage, "My App", icon, true);
+     * Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+     *     tray.dispose();
+     * }));
+     * }</pre>
+     *
+     * <p>If {@code isMinimizeToTray = false}, cleanup is handled automatically when
+     * the window closes.
+     *
+     * @param stage the JavaFX stage to associate with this system tray
+     * @param title the tooltip text displayed when hovering over the tray icon
+     * @param trayIcon the icon image to display in the system tray
+     * @param isMinimizeToTray if true, closing the window minimizes to tray instead of exiting;
+     *                         requires manual cleanup via TrayExitMenuItem or dispose()
+     */
     public SystemTrayFX(Stage stage, String title, Image trayIcon, boolean isMinimizeToTray) {
         this.stage = stage;
         this.titleProperty.set(title);
@@ -89,22 +249,50 @@ public class SystemTrayFX implements ISystemTray {
         });
     }
 
+    /* ---------------- Properties ---------------- */
+
+    /**
+     * Returns the title property for the tray icon tooltip.
+     *
+     * @return the StringProperty representing the tooltip text
+     */
     public StringProperty titleProperty() {
         return titleProperty;
     }
 
+    /**
+     * Gets the current tooltip text of the tray icon.
+     *
+     * @return the tooltip text
+     */
     public String getTitle() {
         return titleProperty.get();
     }
 
+    /**
+     * Sets the tooltip text of the tray icon.
+     *
+     * @param title the new tooltip text
+     */
     public void setTitle(String title) {
         titleProperty.set(title);
     }
 
+    /**
+     * Returns the observable list of menu items.
+     * Items can be added or removed from this list to update the tray menu.
+     *
+     * @return the observable list of TrayMenuItem objects
+     */
     public ObservableList<TrayMenuItem> getItems() {
         return items;
     }
 
+    /* ---------------- Public API ---------------- */
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addEntry(TrayMenuItem... items) {
         if (isInitialized) {
@@ -114,6 +302,9 @@ public class SystemTrayFX implements ISystemTray {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void dispose() {
         if (display == null || display.isDisposed()) return;
@@ -133,6 +324,15 @@ public class SystemTrayFX implements ISystemTray {
         });
     }
 
+    /* ---------------- Protected Methods ---------------- */
+
+    /**
+     * Creates an SWT image from the provided image data.
+     * The created image is tracked for proper disposal.
+     *
+     * @param imageData the image data to convert
+     * @return the created SWT image
+     */
     protected org.eclipse.swt.graphics.Image createImage(ImageData imageData) {
         org.eclipse.swt.graphics.Image image = new org.eclipse.swt.graphics.Image(display, imageData);
         swtImages.add(image);
@@ -140,6 +340,12 @@ public class SystemTrayFX implements ISystemTray {
         return image;
     }
 
+    /* ---------------- Helpers ---------------- */
+
+    /**
+     * Initializes the SWT components on a separate daemon thread.
+     * Creates the display, shell, menu, tray item, and sets up event handlers.
+     */
     private void initSWT() {
         Thread swtThread = new Thread(() -> {
             display = new Display();

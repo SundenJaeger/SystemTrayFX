@@ -1,28 +1,75 @@
 package com.systemtray.core;
 
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.event.ActionEvent;
-import javafx.scene.control.CheckMenuItem;
 import javafx.scene.image.Image;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 
 import java.awt.image.BufferedImage;
 
+/**
+ * Utility class for image conversion operations between JavaFX, Swing, and SWT formats.
+ *
+ * <p>This class provides helper methods to convert images from JavaFX's {@link Image} format
+ * and Java AWT's {@link BufferedImage} format to SWT's {@link ImageData} format, which is
+ * required for displaying images in SWT-based system tray icons.
+ *
+ * <p>This is a utility class with static methods only and cannot be instantiated.
+ *
+ */
 final class Utils {
-    public static ImageData toSWTImage(Image fxImage) {
+
+    /* ---------------- Constructors ---------------- */
+
+    /**
+     * Private constructor to prevent instantiation of this utility class.
+     *
+     * @throws UnsupportedOperationException if called via reflection
+     */
+    private Utils() {
+        throw new UnsupportedOperationException("Utils is a utility class and cannot be instantiated");
+    }
+
+    /* ---------------- Methods ---------------- */
+
+    /**
+     * Converts a JavaFX {@link Image} to SWT {@link ImageData} format.
+     *
+     * <p>This method first converts the JavaFX Image to a Swing BufferedImage,
+     * then converts it to SWT ImageData. This is necessary because JavaFX and SWT
+     * use different image representation formats.
+     *
+     * @param fxImage the JavaFX image to convert
+     * @return the converted SWT ImageData
+     * @throws NullPointerException if fxImage is null
+     * @see #toSWTImage(BufferedImage)
+     */
+    static ImageData toSWTImage(Image fxImage) {
         return toSWTImage(SwingFXUtils.fromFXImage(fxImage, null));
     }
 
-    public static ImageData toSWTImage(BufferedImage image) {
+    /**
+     * Converts a {@link BufferedImage} to SWT {@link ImageData} format.
+     *
+     * <p>This method performs a pixel-by-pixel conversion, preserving the ARGB
+     * (Alpha, Red, Green, Blue) color information. The conversion creates a 32-bit
+     * image with full alpha channel support.
+     *
+     * <p>The conversion process:
+     * <ol>
+     *   <li>Creates a palette with RGB color masks</li>
+     *   <li>Iterates through each pixel in the source image</li>
+     *   <li>Extracts ARGB components from each pixel</li>
+     *   <li>Maps the RGB values to the palette</li>
+     *   <li>Sets both the pixel color and alpha channel in the destination</li>
+     * </ol>
+     *
+     * @param image the BufferedImage to convert
+     * @return the converted SWT ImageData with full ARGB support
+     * @throws NullPointerException if image is null
+     */
+    static ImageData toSWTImage(BufferedImage image) {
         int width = image.getWidth();
         int height = image.getHeight();
 
