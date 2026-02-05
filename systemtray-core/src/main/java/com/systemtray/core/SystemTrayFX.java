@@ -17,6 +17,8 @@
 package com.systemtray.core;
 
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -100,6 +102,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  *     new TrayExitMenuItem("Exit")
  * );
  * }</pre>
+ *
  * @see ISystemTray
  * @see TrayMenuItem
  * @see TrayExitMenuItem
@@ -114,38 +117,56 @@ public class SystemTrayFX implements ISystemTray {
     private Menu menu;
     private TrayItem trayItem;
 
-    /** Handler for tray notifications */
+    /**
+     * Handler for tray notifications
+     */
     private TrayNotification trayNotification;
 
     /* ---------------- Collections ---------------- */
 
-    /** Observable list of menu items displayed in the tray context menu */
+    /**
+     * Observable list of menu items displayed in the tray context menu
+     */
     private final ObservableList<TrayMenuItem> items = FXCollections.observableArrayList();
 
-    /** List of SWT images that need to be disposed when the tray is closed */
+    /**
+     * List of SWT images that need to be disposed when the tray is closed
+     */
     private final List<org.eclipse.swt.graphics.Image> swtImages = new ArrayList<>();
 
-    /** Queue for menu items added before the SWT thread is initialized */
+    /**
+     * Queue for menu items added before the SWT thread is initialized
+     */
     private final Queue<TrayMenuItem[]> pendingItems = new ConcurrentLinkedDeque<>();
 
     /* ---------------- State Flags ---------------- */
 
-    /** Flag indicating whether the SWT thread has been initialized */
+    /**
+     * Flag indicating whether the SWT thread has been initialized
+     */
     private volatile boolean isInitialized = false;
 
     /* ---------------- JavaFX Components ---------------- */
 
-    /** The JavaFX stage associated with this system tray */
+    /**
+     * The JavaFX stage associated with this system tray
+     */
     private final Stage stage;
 
-    /** The icon image displayed in the system tray */
-    private final Image trayIcon;
-
-    /** Whether the application should minimize to tray instead of closing */
+    /**
+     * Whether the application should minimize to tray instead of closing
+     */
     private final boolean isMinimizeToTray;
 
-    /** Observable property for the tray icon tooltip text */
-    private final StringProperty titleProperty = new SimpleStringProperty();
+    /**
+     * Observable property for the tray icon tooltip text
+     */
+    private final StringProperty title = new SimpleStringProperty();
+
+    /**
+     * Observable property representing the tray icon image
+     */
+    private final ObjectProperty<Image> image = new SimpleObjectProperty<>();
 
     /* ---------------- Constructors ---------------- */
 
@@ -195,16 +216,16 @@ public class SystemTrayFX implements ISystemTray {
      * <p>If {@code isMinimizeToTray = false}, cleanup is handled automatically when
      * the window closes.
      *
-     * @param stage the JavaFX stage to associate with this system tray
-     * @param title the tooltip text displayed when hovering over the tray icon
-     * @param trayIcon the icon image to display in the system tray
+     * @param stage            the JavaFX stage to associate with this system tray
+     * @param title            the tooltip text displayed when hovering over the tray icon
+     * @param trayIcon         the icon image to display in the system tray
      * @param isMinimizeToTray if true, closing the window minimizes to tray instead of exiting;
      *                         requires manual cleanup via TrayExitMenuItem or dispose()
      */
     public SystemTrayFX(Stage stage, String title, Image trayIcon, boolean isMinimizeToTray) {
         this.stage = stage;
-        this.titleProperty.set(title);
-        this.trayIcon = trayIcon;
+        this.title.set(title);
+        this.image.set(trayIcon);
         this.isMinimizeToTray = isMinimizeToTray;
 
         initSWT();
@@ -220,9 +241,15 @@ public class SystemTrayFX implements ISystemTray {
             }
         });
 
-        titleProperty.addListener((obs, oldValue, newValue) -> {
+        this.title.addListener((obs, oldValue, newValue) -> {
             if (display != null && !display.isDisposed() && trayItem != null && !trayItem.isDisposed()) {
                 display.asyncExec(() -> trayItem.setToolTipText(newValue));
+            }
+        });
+
+        image.addListener((observable, oldValue, newValue) -> {
+            if (display != null && !display.isDisposed() && trayItem != null && !trayItem.isDisposed()) {
+                display.asyncExec(() -> trayItem.setImage(createImage(Utils.toSWTImage(newValue))));
             }
         });
 
@@ -257,7 +284,11 @@ public class SystemTrayFX implements ISystemTray {
      * @return the StringProperty representing the tooltip text
      */
     public StringProperty titleProperty() {
-        return titleProperty;
+        return title;
+    }
+
+    public ObjectProperty<Image> imageProperty() {
+        return image;
     }
 
     /**
@@ -266,7 +297,7 @@ public class SystemTrayFX implements ISystemTray {
      * @return the tooltip text
      */
     public String getTitle() {
-        return titleProperty.get();
+        return title.get();
     }
 
     /**
@@ -275,7 +306,29 @@ public class SystemTrayFX implements ISystemTray {
      * @param title the new tooltip text
      */
     public void setTitle(String title) {
-        titleProperty.set(title);
+        this.title.set(title);
+    }
+
+    /**
+     * Gets the current tray icon image.
+     *
+     * @return the tray icon image
+     */
+    public Image getImage() {
+        return image.get();
+    }
+
+    /**
+     * Sets the tray icon image.
+     * <p>
+     * The provided image must not be {@code null}.
+     *
+     * @param trayIcon the new tray icon image
+     * @throws NullPointerException if {@code trayIcon} is {@code null}
+     */
+    public void setImage(Image trayIcon) {
+        Objects.requireNonNull(trayIcon, "Tray icon cannot be null");
+        image.set(trayIcon);
     }
 
     /**
@@ -359,8 +412,8 @@ public class SystemTrayFX implements ISystemTray {
             }
 
             trayItem = new TrayItem(tray, SWT.NONE);
-            trayItem.setToolTipText(titleProperty.get());
-            trayItem.setImage(createImage(Utils.toSWTImage(trayIcon)));
+            trayItem.setToolTipText(title.get());
+            trayItem.setImage(createImage(Utils.toSWTImage(image.get())));
 
             trayItem.addSelectionListener(new SelectionAdapter() {
                 @Override
