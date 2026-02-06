@@ -381,13 +381,30 @@ public class SystemTrayFX implements ISystemTray {
 
     /**
      * Creates an SWT image from the provided image data.
+     * <p>
+     * The image is scaled based on the system DPI to ensure the tray icon
+     * renders at an appropriate size on high-DPI displays.
+     * </p>
+     * <p>
      * The created image is tracked for proper disposal.
+     * </p>
      *
      * @param imageData the image data to convert
-     * @return the created SWT image
+     * @return the created, DPI-scaled SWT image
      */
     protected org.eclipse.swt.graphics.Image createImage(ImageData imageData) {
-        org.eclipse.swt.graphics.Image image = new org.eclipse.swt.graphics.Image(display, imageData);
+        int dpiX = display.getDPI().x;
+        int dpiY = display.getDPI().y;
+
+        //96 for baseline DPI (1920 x 1080 | Scaling: 100%)
+        float scaleX = dpiX / 96f;
+        float scaleY = dpiY / 96f;
+
+        //Windows tray icon is 16 x 16, so I think this should be good?
+        int width = Math.round(16 * scaleX);
+        int height = Math.round(16 * scaleY);
+
+        org.eclipse.swt.graphics.Image image = new org.eclipse.swt.graphics.Image(display, imageData.scaledTo(width, height));
         swtImages.add(image);
 
         return image;
