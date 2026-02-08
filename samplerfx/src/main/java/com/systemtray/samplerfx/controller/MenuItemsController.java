@@ -33,7 +33,7 @@ public class MenuItemsController {
 
     @FXML
     private void toTrayExitMenuItem() {
-
+        samplerController.navigateTo(View.TRAY_EXIT_MENU_ITEM_DEMO);
     }
 
     @FXML

@@ -66,8 +66,9 @@ public class SamplerController {
 
         TreeItem<Category> menuItems = createTreeItem("Menu Items", View.MENU_ITEMS);
         menuItems.getChildren().addAll(List.of(
-                createTreeItem("TrayMenuItem", View.TRAY_MENU_ITEM_DEMO))
-        );
+                createTreeItem("TrayMenuItem", View.TRAY_MENU_ITEM_DEMO),
+                createTreeItem("TrayExitMenuItem", View.TRAY_EXIT_MENU_ITEM_DEMO)
+        ));
 
         hidden.getChildren().addAll(List.of(
                 home,
