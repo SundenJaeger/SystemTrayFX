@@ -23,6 +23,7 @@ import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
@@ -71,6 +72,8 @@ public class TrayMenuItem {
      * Reference to the parent system tray context
      */
     private SystemTrayFX ctx;
+
+    private Listener selectionListener;
 
     /* ---------------- Constructors ---------------- */
 
@@ -173,7 +176,7 @@ public class TrayMenuItem {
      * @return the action handler, or null if none is set
      */
     public EventHandler<ActionEvent> getOnAction() {
-        return onAction == null ? null : onAction.get();
+        return onAction.get();
     }
 
     /* ---------------- Properties ---------------- */
@@ -181,8 +184,7 @@ public class TrayMenuItem {
     private final StringProperty text = new SimpleStringProperty();
     private final ObjectProperty<Image> image = new SimpleObjectProperty<>();
     private final BooleanProperty disable = new SimpleBooleanProperty(false);
-
-    private ObjectProperty<EventHandler<ActionEvent>> onAction;
+    private final ObjectProperty<EventHandler<ActionEvent>> onAction = new SimpleObjectProperty<>();
 
     /**
      * Returns the text property for binding.
@@ -217,19 +219,6 @@ public class TrayMenuItem {
      * @return the onAction property
      */
     public ObjectProperty<EventHandler<ActionEvent>> onActionProperty() {
-        if (onAction == null) {
-            onAction = new ObjectPropertyBase<>() {
-                @Override
-                public Object getBean() {
-                    return TrayMenuItem.this;
-                }
-
-                @Override
-                public String getName() {
-                    return "onAction";
-                }
-            };
-        }
         return onAction;
     }
 
@@ -271,6 +260,13 @@ public class TrayMenuItem {
     protected void applyInitialState(MenuItem menuItem, SystemTrayFX ctx) {
         menuItem.setText(Utils.safeText(DEFAULT_TEXT, getText()));
 
+        selectionListener = event -> {
+            if (getOnAction() != null) {
+                Platform.runLater(() -> getOnAction().handle(new ActionEvent(this, null)));
+            }
+        };
+        menuItem.addListener(SWT.Selection, selectionListener);
+
         if (getImage() != null) {
             menuItem.setImage(ctx.createImage(Utils.toSWTImage(getImage())));
         }
@@ -286,16 +282,29 @@ public class TrayMenuItem {
      * @param ctx      the system tray context
      */
     protected void installBaseListeners(Display display, MenuItem menuItem, SystemTrayFX ctx) {
-        if (getOnAction() != null) {
-            menuItem.addListener(SWT.Selection, event -> Platform.runLater(() -> getOnAction().handle(new ActionEvent(this, null))));
-        }
-
         text.addListener((observable, oldValue, newValue) -> {
             if (display == null || display.isDisposed()) return;
 
             if (!menuItem.isDisposed()) {
                 display.asyncExec(() -> menuItem.setText(Utils.safeText(DEFAULT_TEXT, newValue)));
             }
+        });
+
+        onAction.addListener((observable, oldValue, newValue) -> {
+            if (display == null || display.isDisposed()) return;
+
+            display.asyncExec(() -> {
+                if (menuItem.isDisposed()) return;
+
+                if (selectionListener != null) {
+                    menuItem.removeListener(SWT.Selection, selectionListener);
+                }
+
+                if (newValue != null) {
+                    selectionListener = event -> Platform.runLater(() -> newValue.handle(new ActionEvent(this, null)));
+                    menuItem.addListener(SWT.Selection, selectionListener);
+                }
+            });
         });
 
         disable.addListener((observable, oldValue, newValue) -> {
