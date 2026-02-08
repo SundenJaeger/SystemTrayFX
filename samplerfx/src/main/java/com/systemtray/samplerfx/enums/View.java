@@ -20,7 +20,8 @@ public enum View {
     SAMPLER("sampler-view"),
     HOME("home-view"),
     SYSTEM_TRAY_DEMO("system-tray-demo-view"),
-    MENU_ITEMS("menu-items-view");
+    MENU_ITEMS("menu-items-view"),
+    TRAY_MENU_ITEM_DEMO("tray-menu-item-demo-view");
 
     private static final String BASE_PATH = "/com/systemtray/samplerfx/views/";
     private final String fxml;

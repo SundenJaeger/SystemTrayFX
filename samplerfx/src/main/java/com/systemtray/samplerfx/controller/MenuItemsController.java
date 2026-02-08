@@ -16,12 +16,19 @@
 
 package com.systemtray.samplerfx.controller;
 
+import com.systemtray.samplerfx.enums.View;
 import javafx.fxml.FXML;
 
 public class MenuItemsController {
+    private final SamplerController samplerController;
+
+    public MenuItemsController(SamplerController samplerController) {
+        this.samplerController = samplerController;
+    }
+
     @FXML
     private void toTrayMenuItem() {
-
+        samplerController.navigateTo(View.TRAY_MENU_ITEM_DEMO);
     }
 
     @FXML
@@ -46,6 +53,6 @@ public class MenuItemsController {
 
     @FXML
     private void toSeparator() {
-        
+
     }
 }

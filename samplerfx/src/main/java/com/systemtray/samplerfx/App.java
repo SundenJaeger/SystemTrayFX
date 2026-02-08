@@ -17,6 +17,7 @@
 package com.systemtray.samplerfx;
 
 import com.systemtray.core.SystemTrayFX;
+import com.systemtray.core.TrayMenuItem;
 import com.systemtray.samplerfx.controller.SamplerController;
 import com.systemtray.samplerfx.enums.View;
 import javafx.application.Application;
@@ -34,12 +35,17 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         Image image = new Image(Objects.requireNonNull(App.class.getResource("media/default-icon.png")).toExternalForm());
+
         SystemTrayFX systemTrayFX = new SystemTrayFX(stage, "SystemTrayFX Sampler", image);
+
+        TrayMenuItem trayMenuItem = new TrayMenuItem("Sample TrayMenuItem");
+
+        systemTrayFX.addEntry(trayMenuItem);
 
         FXMLLoader loader = new FXMLLoader(App.class.getResource(View.SAMPLER.getFxml()));
         loader.setControllerFactory(param -> {
             if (param == SamplerController.class) {
-                return new SamplerController(systemTrayFX);
+                return new SamplerController(systemTrayFX, trayMenuItem);
             } else {
                 try {
                     return param.getConstructor().newInstance();
