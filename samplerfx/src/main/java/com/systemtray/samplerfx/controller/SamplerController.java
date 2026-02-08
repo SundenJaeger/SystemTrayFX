@@ -29,7 +29,6 @@ import javafx.scene.layout.BorderPane;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.Objects;
 
 public class SamplerController {
     private final SystemTrayFX systemTrayFX;
@@ -52,12 +51,13 @@ public class SamplerController {
         TreeItem<Category> hidden = new TreeItem<>(new Category("Hidden", null));
 
         TreeItem<Category> home = new TreeItem<>(new Category("Home", View.HOME));
-
         TreeItem<Category> systemTray = new TreeItem<>(new Category("System tray", View.SYSTEM_TRAY_DEMO));
+        TreeItem<Category> menuItems = new TreeItem<>(new Category("Menu Items", View.MENU_ITEMS));
 
         hidden.getChildren().addAll(List.of(
                 home,
-                systemTray
+                systemTray,
+                menuItems
         ));
 
         treeView.setRoot(hidden);

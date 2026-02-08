@@ -14,22 +14,38 @@
  * limitations under the License.
  */
 
-package com.systemtray.samplerfx.enums;
+package com.systemtray.samplerfx.controller;
 
-public enum View {
-    SAMPLER("sampler-view"),
-    HOME("home-view"),
-    SYSTEM_TRAY_DEMO("system-tray-demo-view"),
-    MENU_ITEMS("menu-items-view");
+import javafx.fxml.FXML;
 
-    private static final String BASE_PATH = "/com/systemtray/samplerfx/views/";
-    private final String fxml;
+public class MenuItemsController {
+    @FXML
+    private void toTrayMenuItem() {
 
-    View(String fxml) {
-        this.fxml = fxml;
     }
 
-    public String getFxml() {
-        return BASE_PATH + fxml + ".fxml";
+    @FXML
+    private void toTrayExitMenuItem() {
+
+    }
+
+    @FXML
+    private void toTrayCheckMenuItem() {
+
+    }
+
+    @FXML
+    private void toTrayMenu() {
+
+    }
+
+    @FXML
+    private void toFXMenuItemWrapper() {
+
+    }
+
+    @FXML
+    private void toSeparator() {
+        
     }
 }
