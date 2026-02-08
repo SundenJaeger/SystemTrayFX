@@ -315,13 +315,17 @@ public class TrayMenuItem {
             }
         });
 
-        image.addListener((observable, oldValue, newValue) -> {
-            if (display == null || display.isDisposed()) return;
+            image.addListener((observable, oldValue, newValue) -> {
+                if (display == null || display.isDisposed()) return;
 
-            if (!menuItem.isDisposed()) {
-                display.asyncExec(() -> ctx.createImage(Utils.toSWTImage(newValue)));
-            }
-        });
+                display.asyncExec(() -> {
+                    if (menuItem.isDisposed()) return;
+
+                    if (newValue != null) {
+                        menuItem.setImage(ctx.createImage(Utils.toSWTImage(newValue)));
+                    }
+                });
+            });
     }
 
     /**
