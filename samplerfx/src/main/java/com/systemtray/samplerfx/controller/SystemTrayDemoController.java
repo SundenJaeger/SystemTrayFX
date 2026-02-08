@@ -21,6 +21,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -35,7 +36,7 @@ public class SystemTrayDemoController {
     @FXML
     private CheckBox enableTextPropertyCheckBox;
     @FXML
-    private TextArea textPropertyTextArea;
+    private TextField textPropertyTextField;
     @FXML
     private CheckBox enableImagePropertyCheckBox;
     @FXML
@@ -48,8 +49,8 @@ public class SystemTrayDemoController {
     @FXML
     private void initialize() {
         systemTrayFX.minimizeToTrayProperty().bind(isMinimizeToTrayCheckBox.selectedProperty());
-        textPropertyTextArea.disableProperty().bind(enableTextPropertyCheckBox.selectedProperty().not());
-        systemTrayFX.titleProperty().bind(textPropertyTextArea.textProperty());
+        textPropertyTextField.disableProperty().bind(enableTextPropertyCheckBox.selectedProperty().not());
+        systemTrayFX.titleProperty().bind(textPropertyTextField.textProperty());
         chooseImageButton.disableProperty().bind(enableImagePropertyCheckBox.selectedProperty().not());
     }
 

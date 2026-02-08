@@ -8,6 +8,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
@@ -41,10 +42,10 @@
          <children>
             <GridPane vgap="5.0">
                <columnConstraints>
-                  <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" />
-                  <ColumnConstraints hgrow="ALWAYS" />
+                  <ColumnConstraints hgrow="SOMETIMES" />
                </columnConstraints>
                <rowConstraints>
+                  <RowConstraints vgrow="SOMETIMES" />
                   <RowConstraints vgrow="SOMETIMES" />
                   <RowConstraints vgrow="SOMETIMES" />
                   <RowConstraints vgrow="SOMETIMES" />
@@ -55,33 +56,28 @@
                <children>
                   <VBox GridPane.columnSpan="2147483647">
                      <children>
-                        <Label text="System tray">
-                           <font>
-                              <Font name="Segoe UI Semibold" size="25.0" />
-                           </font>
-                        </Label>
-                        <Label text="Label">
+                        <HBox spacing="5.0">
+                           <children>
+                              <Label text="System tray">
+                                 <font>
+                                    <Font name="Segoe UI Semibold" size="25.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <Label text="A JavaFX-based system tray implementation that integrates with the native system tray using SWT (Standard Widget Toolkit).The system tray runs on a separate SWT thread to prevent blocking the JavaFX application thread." wrapText="true">
                            <font>
                               <Font name="Segoe UI Semilight" size="15.0" />
                            </font>
                         </Label>
                      </children>
                   </VBox>
-                  <Label text="Properties" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                  <Label text="Properties" GridPane.rowIndex="3">
                      <font>
                         <Font name="Segoe UI Semibold" size="20.0" />
                      </font>
                   </Label>
-                  <Accordion GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
-                     <panes>
-                        <TitledPane animated="false" text="Source Code">
-                           <content>
-                              <TextArea prefHeight="100.0" />
-                           </content>
-                        </TitledPane>
-                     </panes>
-                  </Accordion>
-                  <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+                  <VBox spacing="5.0" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
                      <children>
                         <CheckBox fx:id="isMinimizeToTrayCheckBox" mnemonicParsing="false" text="isMinimizeToTray">
                            <font>
@@ -99,7 +95,7 @@
                                     <Font name="Segoe UI Semilight" size="14.0" />
                                  </font>
                               </CheckBox>
-                              <TextArea fx:id="textPropertyTextArea" maxHeight="-Infinity" prefHeight="40.0" text="SystemTrayFX Sampler" wrapText="true" />
+                              <TextField fx:id="textPropertyTextField" maxHeight="-Infinity" text="SystemTrayFX Sampler" />
                            </children>
                         </VBox>
                         <Separator />
@@ -119,16 +115,25 @@
                         </VBox>
                      </children>
                   </VBox>
-                  <Label text="Preview" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <Label text="Preview" GridPane.rowIndex="1">
                      <font>
                         <Font name="Segoe UI Semibold" size="20.0" />
                      </font>
                   </Label>
-                  <ImageView cache="true" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <ImageView cache="true" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2">
                      <image>
                         <Image url="@../media/system-tray-demo.gif" />
                      </image>
                   </ImageView>
+                  <Accordion GridPane.rowIndex="5">
+                    <panes>
+                      <TitledPane animated="false" text="Source Code">
+                           <content>
+                              <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" text="// Create system tray&#10;Image image = new Image(Objects.requireNonNull(App.class.getResource(&quot;media/default-icon.png&quot;)).toExternalForm());&#10;SystemTrayFX systemTrayFX = new SystemTrayFX(stage, &quot;SystemTrayFX Sampler&quot;, image);&#10;&#10;public class SystemTrayDemoController {&#10;    private final SystemTrayFX systemTrayFX;&#10;&#10;    @FXML&#10;    private CheckBox isMinimizeToTrayCheckBox;&#10;    @FXML&#10;    private CheckBox enableTextPropertyCheckBox;&#10;    @FXML&#10;    private TextField textPropertyTextField;&#10;    @FXML&#10;    private CheckBox enableImagePropertyCheckBox;&#10;    @FXML&#10;    private Button chooseImageButton;&#10;&#10;    public SystemTrayDemoController(SystemTrayFX systemTrayFX) {&#10;        this.systemTrayFX = systemTrayFX;&#10;    }&#10;&#10;    @FXML&#10;    private void initialize() {&#10;        systemTrayFX.minimizeToTrayProperty().bind(isMinimizeToTrayCheckBox.selectedProperty());&#10;        textPropertyTextField.disableProperty().bind(enableTextPropertyCheckBox.selectedProperty().not());&#10;        systemTrayFX.titleProperty().bind(textPropertyTextField.textProperty());&#10;        chooseImageButton.disableProperty().bind(enableImagePropertyCheckBox.selectedProperty().not());&#10;    }&#10;&#10;    @FXML&#10;    private void chooseImage() {&#10;        Stage stage = (Stage) chooseImageButton.getScene().getWindow();&#10;        FileChooser fileChooser = new FileChooser();&#10;        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(&quot;Image files&quot;, &quot;*.jpg;*.jpeg;*.png&quot;));&#10;&#10;        File file = fileChooser.showOpenDialog(stage);&#10;        if (file != null) {&#10;            systemTrayFX.setImage(new Image(file.toURI().toString()));&#10;        }&#10;    }&#10;}" />
+                           </content>
+                        </TitledPane>
+                    </panes>
+                  </Accordion>
                </children>
             </GridPane>
          </children>
