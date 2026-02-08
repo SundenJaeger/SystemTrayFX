@@ -17,10 +17,7 @@
 package com.systemtray.core;
 
 import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -156,7 +153,7 @@ public class SystemTrayFX implements ISystemTray {
     /**
      * Whether the application should minimize to tray instead of closing
      */
-    private final boolean isMinimizeToTray;
+    private final BooleanProperty minimizeToTray = new SimpleBooleanProperty(false);
 
     /**
      * Observable property for the tray icon tooltip text
@@ -185,7 +182,7 @@ public class SystemTrayFX implements ISystemTray {
     /**
      * Creates a system tray icon with the specified configuration.
      *
-     * <p><strong>Important:</strong> When using {@code isMinimizeToTray = true}, the application
+     * <p><strong>Important:</strong> When using {@code minimizeToTray = true}, the application
      * will not exit automatically when the window is closed. To ensure proper cleanup of system
      * tray resources, you must either:
      * <ul>
@@ -213,33 +210,26 @@ public class SystemTrayFX implements ISystemTray {
      * }));
      * }</pre>
      *
-     * <p>If {@code isMinimizeToTray = false}, cleanup is handled automatically when
+     * <p>If {@code minimizeToTray = false}, cleanup is handled automatically when
      * the window closes.
      *
-     * @param stage            the JavaFX stage to associate with this system tray
-     * @param title            the tooltip text displayed when hovering over the tray icon
-     * @param trayIcon         the icon image to display in the system tray
-     * @param isMinimizeToTray if true, closing the window minimizes to tray instead of exiting;
-     *                         requires manual cleanup via TrayExitMenuItem or dispose()
+     * @param stage          the JavaFX stage to associate with this system tray
+     * @param title          the tooltip text displayed when hovering over the tray icon
+     * @param trayIcon       the icon image to display in the system tray
+     * @param minimizeToTray if true, closing the window minimizes to tray instead of exiting;
+     *                       requires manual cleanup via TrayExitMenuItem or dispose()
      */
-    public SystemTrayFX(Stage stage, String title, Image trayIcon, boolean isMinimizeToTray) {
+    public SystemTrayFX(Stage stage, String title, Image trayIcon, boolean minimizeToTray) {
         this.stage = stage;
         this.title.set(title);
         this.image.set(trayIcon);
-        this.isMinimizeToTray = isMinimizeToTray;
+        this.minimizeToTray.set(minimizeToTray);
 
         initSWT();
 
-        Platform.setImplicitExit(!isMinimizeToTray);
-        this.stage.setOnCloseRequest(windowEvent -> {
-            if (isMinimizeToTray) {
-                windowEvent.consume();
-                stage.hide();
-            } else {
-                dispose();
-                Platform.exit();
-            }
-        });
+        stageCloseRequest(minimizeToTray);
+
+        this.minimizeToTray.addListener((observable, oldValue, newValue) -> stageCloseRequest(newValue));
 
         this.title.addListener((obs, oldValue, newValue) -> {
             if (display != null && !display.isDisposed() && trayItem != null && !trayItem.isDisposed()) {
@@ -291,6 +281,10 @@ public class SystemTrayFX implements ISystemTray {
         return image;
     }
 
+    public BooleanProperty minimizeToTrayProperty() {
+        return minimizeToTray;
+    }
+
     /**
      * Gets the current tooltip text of the tray icon.
      *
@@ -329,6 +323,14 @@ public class SystemTrayFX implements ISystemTray {
     public void setImage(Image trayIcon) {
         Objects.requireNonNull(trayIcon, "Tray icon cannot be null");
         image.set(trayIcon);
+    }
+
+    public boolean isMinimizeToTray() {
+        return minimizeToTray.get();
+    }
+
+    public void setMinimizeToTray(boolean minimizeToTray) {
+        this.minimizeToTray.set(minimizeToTray);
     }
 
     /**
@@ -436,7 +438,7 @@ public class SystemTrayFX implements ISystemTray {
                 @Override
                 public void widgetSelected(SelectionEvent e) {
                     Platform.runLater(() -> {
-                        if (isMinimizeToTray && !stage.isShowing()) stage.show();
+                        if (isMinimizeToTray() && !stage.isShowing()) stage.show();
                         if (stage.isIconified()) stage.setIconified(false);
                         stage.toFront();
                     });
@@ -460,5 +462,19 @@ public class SystemTrayFX implements ISystemTray {
 
         swtThread.setDaemon(true);
         swtThread.start();
+    }
+
+    private void stageCloseRequest(boolean minimizeToTray) {
+        Platform.setImplicitExit(!minimizeToTray);
+
+        stage.setOnCloseRequest(event -> {
+            if (minimizeToTray) {
+                event.consume();
+                stage.hide();
+            } else {
+                dispose();
+                Platform.exit();
+            }
+        });
     }
 }
