@@ -9,6 +9,7 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -33,7 +34,6 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
 
 <ScrollPane fitToWidth="true" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.systemtray.samplerfx.controller.SystemTrayDemoController">
    <content>
@@ -87,35 +87,32 @@
                            <font>
                               <Font name="Segoe UI Semilight" size="14.0" />
                            </font>
-                        </CheckBox>
-                        <Separator />
-                        <CheckBox fx:id="disabledPropertyCheckBox" mnemonicParsing="false" text="DisabledProperty">
-                           <font>
-                              <Font name="Segoe UI Semilight" size="14.0" />
-                           </font>
+                           <tooltip>
+                              <Tooltip text="Setting this to true will make the stage not exit." />
+                           </tooltip>
                         </CheckBox>
                         <Separator />
                         <VBox spacing="5.0">
                            <children>
-                              <CheckBox fx:id="textPropertyCheckBox" mnemonicParsing="false" text="Enable TextProperty">
+                              <CheckBox fx:id="enableTextPropertyCheckBox" mnemonicParsing="false" text="Enable TextProperty">
                                  <font>
                                     <Font name="Segoe UI Semilight" size="14.0" />
                                  </font>
                               </CheckBox>
-                              <TextArea fx:id="textPropertyTextArea" maxHeight="-Infinity" prefHeight="40.0" wrapText="true" />
+                              <TextArea fx:id="textPropertyTextArea" maxHeight="-Infinity" prefHeight="40.0" text="SystemTrayFX Sampler" wrapText="true" />
                            </children>
                         </VBox>
                         <Separator />
                         <VBox spacing="5.0">
                            <children>
-                              <CheckBox mnemonicParsing="false" text="Enable ImageProperty">
+                              <CheckBox fx:id="enableImagePropertyCheckBox" mnemonicParsing="false" text="Enable ImageProperty">
                                  <font>
                                     <Font name="Segoe UI Semilight" size="14.0" />
                                  </font>
                               </CheckBox>
                               <HBox>
                                  <children>
-                                    <Button mnemonicParsing="false" text="Choose Image" />
+                                    <Button fx:id="chooseImageButton" mnemonicParsing="false" onAction="#chooseImage" text="Choose Image" />
                                  </children>
                               </HBox>
                            </children>

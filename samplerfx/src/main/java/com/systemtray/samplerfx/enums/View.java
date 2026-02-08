@@ -21,7 +21,7 @@ public enum View {
     HOME("home-view"),
     SYSTEM_TRAY_DEMO("system-tray-demo-view");
 
-    private static final String BASE_PATH = "views/";
+    private static final String BASE_PATH = "/com/systemtray/samplerfx/views/";
     private final String fxml;
 
     View(String fxml) {

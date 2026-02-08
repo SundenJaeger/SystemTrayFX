@@ -19,21 +19,17 @@ package com.systemtray.samplerfx;
 import com.systemtray.core.SystemTrayFX;
 import com.systemtray.samplerfx.controller.SamplerController;
 import com.systemtray.samplerfx.enums.View;
-import com.systemtray.samplerfx.model.Category;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.List;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 
 public class App extends Application {
-    private SamplerController controller;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -41,46 +37,25 @@ public class App extends Application {
         SystemTrayFX systemTrayFX = new SystemTrayFX(stage, "SystemTrayFX Sampler", image);
 
         FXMLLoader loader = new FXMLLoader(App.class.getResource(View.SAMPLER.getFxml()));
+        loader.setControllerFactory(param -> {
+            if (param == SamplerController.class) {
+                return new SamplerController(systemTrayFX);
+            } else {
+                try {
+                    return param.getConstructor().newInstance();
+                } catch (InvocationTargetException | InstantiationException | IllegalAccessException |
+                         NoSuchMethodException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
         Scene scene = new Scene(loader.load(), 900, 480);
-        controller = loader.getController();
 
         stage.setTitle("SystemTrayFX Sampler");
         stage.setScene(scene);
         stage.show();
-
-        initCategories();
-
     }
 
-    private void initCategories() {
-        TreeItem<Category> hidden = new TreeItem<>(new Category("Hidden", null));
-
-        TreeItem<Category> home = new TreeItem<>(new Category("Home", View.HOME));
-
-        TreeItem<Category> systemTray = new TreeItem<>(new Category("System tray", View.SYSTEM_TRAY_DEMO));
-
-        hidden.getChildren().addAll(List.of(
-                home,
-                systemTray
-        ));
-
-        controller.getTreeView().setRoot(hidden);
-        controller.getTreeView().setShowRoot(false);
-
-        controller.getTreeView().getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null && newValue.getValue().view() != null) {
-                controller.getBorderPane().setCenter(loadNode2(newValue.getValue().view().getFxml()));
-            }
-        });
-    }
-
-    private Node loadNode2(String fxml) {
-        try {
-            return FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxml)));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     static void main(String[] args) {
         launch(args);
