@@ -60,7 +60,7 @@
                            <children>
                               <Label text="System tray">
                                  <font>
-                                    <Font name="Segoe UI Semibold" size="25.0" />
+                                    <Font name="Segoe UI Semibold" size="30.0" />
                                  </font>
                               </Label>
                            </children>
