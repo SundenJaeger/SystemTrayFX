@@ -68,6 +68,10 @@ public class TrayMenuItem {
 
     /* ---------------- SWT Components ---------------- */
 
+    protected Display display;
+
+    protected SystemTrayFX ctx;
+
     private MenuItem swtMenuItem;
 
     private Listener selectionListener;
@@ -230,6 +234,9 @@ public class TrayMenuItem {
      * @param ctx     the system tray context
      */
     protected void create(Display display, Menu menu, SystemTrayFX ctx) {
+        this.display = display;
+        this.ctx = ctx;
+
         swtMenuItem = new org.eclipse.swt.widgets.MenuItem(menu, getSWTStyle());
         applyInitialState(swtMenuItem, ctx);
         installBaseListeners(display, swtMenuItem, ctx);
