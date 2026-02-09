@@ -68,10 +68,7 @@ public class TrayMenuItem {
 
     /* ---------------- SWT Components ---------------- */
 
-    /**
-     * Reference to the parent system tray context
-     */
-    private SystemTrayFX ctx;
+    private MenuItem swtMenuItem;
 
     private Listener selectionListener;
 
@@ -233,12 +230,10 @@ public class TrayMenuItem {
      * @param ctx     the system tray context
      */
     protected void create(Display display, Menu menu, SystemTrayFX ctx) {
-        this.ctx = ctx;
-
-        org.eclipse.swt.widgets.MenuItem menuItem = new org.eclipse.swt.widgets.MenuItem(menu, getSWTStyle());
-        applyInitialState(menuItem, ctx);
-        installBaseListeners(display, menuItem, ctx);
-        installSubclassListeners(display, menuItem, ctx);
+        swtMenuItem = new org.eclipse.swt.widgets.MenuItem(menu, getSWTStyle());
+        applyInitialState(swtMenuItem, ctx);
+        installBaseListeners(display, swtMenuItem, ctx);
+        installSubclassListeners(display, swtMenuItem, ctx);
     }
 
     /**
@@ -315,17 +310,17 @@ public class TrayMenuItem {
             }
         });
 
-            image.addListener((observable, oldValue, newValue) -> {
-                if (display == null || display.isDisposed()) return;
+        image.addListener((observable, oldValue, newValue) -> {
+            if (display == null || display.isDisposed()) return;
 
-                display.asyncExec(() -> {
-                    if (menuItem.isDisposed()) return;
+            display.asyncExec(() -> {
+                if (menuItem.isDisposed()) return;
 
-                    if (newValue != null) {
-                        menuItem.setImage(ctx.createImage(Utils.toSWTImage(newValue)));
-                    }
-                });
+                if (newValue != null) {
+                    menuItem.setImage(ctx.createImage(Utils.toSWTImage(newValue)));
+                }
             });
+        });
     }
 
     /**
@@ -348,6 +343,11 @@ public class TrayMenuItem {
      * Called when the item is removed from the menu.
      */
     protected void dispose() {
-        ctx.dispose();
+        if (swtMenuItem != null && !swtMenuItem.isDisposed()) {
+            swtMenuItem.dispose();
+        }
+
+        swtMenuItem = null;
+        selectionListener = null;
     }
 }
