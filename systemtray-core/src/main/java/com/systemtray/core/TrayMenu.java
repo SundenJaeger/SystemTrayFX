@@ -173,7 +173,11 @@ public class TrayMenu extends TrayMenuItem {
         super(Utils.safeText(DEFAULT_MENU_TEXT, text), image);
 
         if (items != null) {
-            this.items.addAll(items);
+            if (!isInitialized) {
+                pendingItems.addAll(List.of(items));
+            } else {
+                this.items.addAll(items);
+            }
         }
 
         this.items.addListener((ListChangeListener<TrayMenuItem>) change -> {
