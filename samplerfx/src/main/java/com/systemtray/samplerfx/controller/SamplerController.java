@@ -67,7 +67,8 @@ public class SamplerController {
         TreeItem<Category> menuItems = createTreeItem("Menu Items", View.MENU_ITEMS);
         menuItems.getChildren().addAll(List.of(
                 createTreeItem("TrayMenuItem", View.TRAY_MENU_ITEM_DEMO),
-                createTreeItem("TrayExitMenuItem", View.TRAY_EXIT_MENU_ITEM_DEMO)
+                createTreeItem("TrayExitMenuItem", View.TRAY_EXIT_MENU_ITEM_DEMO),
+                createTreeItem("TrayCheckMenuItem", View.TRAY_CHECK_MENU_ITEM_DEMO)
         ));
 
         hidden.getChildren().addAll(List.of(
@@ -101,6 +102,8 @@ public class SamplerController {
                         return new TrayMenuItemDemoController(systemTrayFX);
                     } else if (param == TrayExitMenuItemDemoController.class) {
                         return new TrayExitMenuItemDemoController(systemTrayFX);
+                    } else if (param == TrayCheckMenuItemDemoController.class) {
+                        return new TrayCheckMenuItemDemoController(systemTrayFX);
                     } else {
                         try {
                             return param.getConstructor().newInstance();

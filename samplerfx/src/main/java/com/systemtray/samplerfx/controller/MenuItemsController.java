@@ -38,7 +38,7 @@ public class MenuItemsController {
 
     @FXML
     private void toTrayCheckMenuItem() {
-
+        samplerController.navigateTo(View.TRAY_CHECK_MENU_ITEM_DEMO);
     }
 
     @FXML
