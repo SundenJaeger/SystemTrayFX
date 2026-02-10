@@ -16,61 +16,34 @@
 
 package com.systemtray.samplerfx.controller;
 
+import com.systemtray.core.SystemTrayFX;
 import com.systemtray.core.TrayMenuItem;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
-import java.io.File;
-
-public class TrayMenuItemDemoController {
+public class TrayMenuItemDemoController extends BaseTrayMenuItemDemoController {
     private final IntegerProperty numberOfClicks = new SimpleIntegerProperty(0);
 
-    private final TrayMenuItem trayMenuItem;
-
-    @FXML
-    private CheckBox isDisabledCheckBox;
-    @FXML
-    private CheckBox enableTextPropertyCheckBox;
-    @FXML
-    private TextField textPropertyTextField;
-    @FXML
-    private CheckBox enableImagePropertyCheckBox;
     @FXML
     private Label numberOfClicksLabel;
-    @FXML
-    private Button chooseImageButton;
 
-    public TrayMenuItemDemoController(TrayMenuItem trayMenuItem) {
-        this.trayMenuItem = trayMenuItem;
+    public TrayMenuItemDemoController(SystemTrayFX systemTrayFX) {
+        super(systemTrayFX);
     }
 
     @FXML
-    private void initialize() {
-        trayMenuItem.setOnAction(event -> numberOfClicks.set(numberOfClicks.get() + 1));
+    protected void initialize() {
+        super.initialize();
         numberOfClicksLabel.textProperty().bind(numberOfClicks.asString());
-        trayMenuItem.disableProperty().bind(isDisabledCheckBox.selectedProperty());
-        textPropertyTextField.disableProperty().bind(enableTextPropertyCheckBox.selectedProperty().not());
-        trayMenuItem.textProperty().bind(textPropertyTextField.textProperty());
-        chooseImageButton.disableProperty().bind(enableImagePropertyCheckBox.selectedProperty().not());
     }
 
-    @FXML
-    private void chooseImage() {
-        Stage stage = (Stage) chooseImageButton.getScene().getWindow();
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image files", "*.jpg;*.jpeg;*.png"));
+    @Override
+    protected TrayMenuItem createMenuItem() {
+        TrayMenuItem trayMenuItem = new TrayMenuItem("Sample TrayMenuItem");
+        trayMenuItem.setOnAction(event -> numberOfClicks.set(numberOfClicks.get() + 1));
 
-        File file = fileChooser.showOpenDialog(stage);
-        if (file != null) {
-            trayMenuItem.setImage(new Image(file.toURI().toString()));
-        }
+        return trayMenuItem;
     }
 }

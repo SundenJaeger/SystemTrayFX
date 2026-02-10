@@ -16,8 +16,7 @@
 
 package com.systemtray.samplerfx;
 
-import com.systemtray.core.SystemTrayFX;
-import com.systemtray.core.TrayMenuItem;
+import com.systemtray.core.*;
 import com.systemtray.samplerfx.controller.SamplerController;
 import com.systemtray.samplerfx.enums.View;
 import javafx.application.Application;
@@ -38,14 +37,10 @@ public class App extends Application {
 
         SystemTrayFX systemTrayFX = new SystemTrayFX(stage, "SystemTrayFX Sampler", image);
 
-        TrayMenuItem trayMenuItem = new TrayMenuItem("Sample TrayMenuItem");
-
-        systemTrayFX.addEntry(trayMenuItem);
-
         FXMLLoader loader = new FXMLLoader(App.class.getResource(View.SAMPLER.getFxml()));
         loader.setControllerFactory(param -> {
             if (param == SamplerController.class) {
-                return new SamplerController(systemTrayFX, trayMenuItem);
+                return new SamplerController(systemTrayFX);
             } else {
                 try {
                     return param.getConstructor().newInstance();

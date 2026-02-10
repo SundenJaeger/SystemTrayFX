@@ -80,6 +80,13 @@
                   </Label>
                   <VBox spacing="5.0" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
                      <children>
+                        <HBox spacing="5.0">
+                           <children>
+                              <Button fx:id="addTrayMenuItemButton" mnemonicParsing="false" onAction="#addTrayMenuItem" text="Add TrayMenuItem" />
+                              <Button fx:id="removeTrayMenuItemButton" mnemonicParsing="false" onAction="#removeTrayMenuItem" text="Remove TrayMenuItem" />
+                           </children>
+                        </HBox>
+                        <Separator prefWidth="200.0" />
                         <CheckBox fx:id="isDisabledCheckBox" mnemonicParsing="false" text="isDisabled">
                            <font>
                               <Font name="Segoe UI Semilight" size="14.0" />

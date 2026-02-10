@@ -30,23 +30,23 @@ import javafx.scene.layout.BorderPane;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SamplerController {
     private static final Map<View, TreeItem<Category>> TREE_ITEM = new EnumMap<>(View.class);
+    private static final Map<View, Node> NODE_CACHE = new EnumMap<>(View.class);
 
     private final SystemTrayFX systemTrayFX;
-    private final TrayMenuItem trayMenuItem;
 
     @FXML
     private BorderPane borderPane;
     @FXML
     private TreeView<Category> treeView;
 
-    public SamplerController(SystemTrayFX systemTrayFX, TrayMenuItem trayMenuItem) {
+    public SamplerController(SystemTrayFX systemTrayFX) {
         this.systemTrayFX = systemTrayFX;
-        this.trayMenuItem = trayMenuItem;
     }
 
     @FXML
@@ -81,36 +81,40 @@ public class SamplerController {
 
         treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null && newValue.getValue().view() != null) {
-                borderPane.setCenter(loadNode2(newValue.getValue().view().getFxml()));
+                borderPane.setCenter(loadNode2(newValue.getValue().view()));
             }
         });
 
         treeView.getSelectionModel().select(home);
     }
 
-    private Node loadNode2(String fxml) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
-            loader.setControllerFactory(param -> {
-                if (param == SystemTrayDemoController.class) {
-                    return new SystemTrayDemoController(systemTrayFX);
-                } else if (param == MenuItemsController.class) {
-                    return new MenuItemsController(this);
-                } else if (param == TrayMenuItemDemoController.class) {
-                    return new TrayMenuItemDemoController(trayMenuItem);
-                } else {
-                    try {
-                        return param.getConstructor().newInstance();
-                    } catch (InvocationTargetException | NoSuchMethodException | InstantiationException |
-                             IllegalAccessException e) {
-                        throw new RuntimeException(e);
+    private Node loadNode2(View view) {
+        return NODE_CACHE.computeIfAbsent(view, v -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource(v.getFxml()));
+                loader.setControllerFactory(param -> {
+                    if (param == SystemTrayDemoController.class) {
+                        return new SystemTrayDemoController(systemTrayFX);
+                    } else if (param == MenuItemsController.class) {
+                        return new MenuItemsController(this);
+                    } else if (param == TrayMenuItemDemoController.class) {
+                        return new TrayMenuItemDemoController(systemTrayFX);
+                    } else if (param == TrayExitMenuItemDemoController.class) {
+                        return new TrayExitMenuItemDemoController(systemTrayFX);
+                    } else {
+                        try {
+                            return param.getConstructor().newInstance();
+                        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException |
+                                 IllegalAccessException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
-                }
-            });
-            return loader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+                });
+                return loader.load();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private TreeItem<Category> createTreeItem(String title, View view) {

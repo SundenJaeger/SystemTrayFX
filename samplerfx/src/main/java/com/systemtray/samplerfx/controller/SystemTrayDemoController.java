@@ -17,6 +17,7 @@
 package com.systemtray.samplerfx.controller;
 
 import com.systemtray.core.SystemTrayFX;
+import com.systemtray.core.TrayMenuItem;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -28,41 +29,8 @@ import javafx.stage.Stage;
 
 import java.io.File;
 
-public class SystemTrayDemoController {
-    private final SystemTrayFX systemTrayFX;
-
-    @FXML
-    private CheckBox isMinimizeToTrayCheckBox;
-    @FXML
-    private CheckBox enableTextPropertyCheckBox;
-    @FXML
-    private TextField textPropertyTextField;
-    @FXML
-    private CheckBox enableImagePropertyCheckBox;
-    @FXML
-    private Button chooseImageButton;
-
+public class SystemTrayDemoController extends BaseDemoController {
     public SystemTrayDemoController(SystemTrayFX systemTrayFX) {
-        this.systemTrayFX = systemTrayFX;
-    }
-
-    @FXML
-    private void initialize() {
-        systemTrayFX.minimizeToTrayProperty().bind(isMinimizeToTrayCheckBox.selectedProperty());
-        textPropertyTextField.disableProperty().bind(enableTextPropertyCheckBox.selectedProperty().not());
-        systemTrayFX.titleProperty().bind(textPropertyTextField.textProperty());
-        chooseImageButton.disableProperty().bind(enableImagePropertyCheckBox.selectedProperty().not());
-    }
-
-    @FXML
-    private void chooseImage() {
-        Stage stage = (Stage) chooseImageButton.getScene().getWindow();
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image files", "*.jpg;*.jpeg;*.png"));
-
-        File file = fileChooser.showOpenDialog(stage);
-        if (file != null) {
-            systemTrayFX.setImage(new Image(file.toURI().toString()));
-        }
+        super(systemTrayFX);
     }
 }

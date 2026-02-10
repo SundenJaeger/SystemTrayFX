@@ -16,5 +16,17 @@
 
 package com.systemtray.samplerfx.controller;
 
-public class TrayExitMenuItemDemoController {
+import com.systemtray.core.SystemTrayFX;
+import com.systemtray.core.TrayExitMenuItem;
+import com.systemtray.core.TrayMenuItem;
+
+public class TrayExitMenuItemDemoController extends BaseTrayMenuItemDemoController {
+    public TrayExitMenuItemDemoController(SystemTrayFX systemTrayFX) {
+        super(systemTrayFX);
+    }
+
+    @Override
+    protected TrayMenuItem createMenuItem() {
+        return new TrayExitMenuItem();
+    }
 }
