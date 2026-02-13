@@ -48,7 +48,7 @@ public class MenuItemsController {
 
     @FXML
     private void toFXMenuItemWrapper() {
-
+        samplerController.navigateTo(View.FX_MENU_ITEM_WRAPPER_DEMO);
     }
 
     @FXML
