@@ -43,7 +43,7 @@ public class MenuItemsController {
 
     @FXML
     private void toTrayMenu() {
-
+        samplerController.navigateTo(View.TRAY_MENU_DEMO);
     }
 
     @FXML
