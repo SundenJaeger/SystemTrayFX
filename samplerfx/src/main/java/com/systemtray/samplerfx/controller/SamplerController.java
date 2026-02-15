@@ -17,7 +17,6 @@
 package com.systemtray.samplerfx.controller;
 
 import com.systemtray.core.SystemTrayFX;
-import com.systemtray.core.TrayMenuItem;
 import com.systemtray.samplerfx.enums.View;
 import com.systemtray.samplerfx.model.Category;
 import javafx.fxml.FXML;
@@ -30,13 +29,11 @@ import javafx.scene.layout.BorderPane;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SamplerController {
     private static final Map<View, TreeItem<Category>> TREE_ITEM = new EnumMap<>(View.class);
-    private static final Map<View, Node> NODE_CACHE = new EnumMap<>(View.class);
 
     private final SystemTrayFX systemTrayFX;
 
@@ -85,6 +82,7 @@ public class SamplerController {
 
         treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null && newValue.getValue().view() != null) {
+                systemTrayFX.getItems().clear();
                 borderPane.setCenter(loadNode2(newValue.getValue().view()));
             }
         });
@@ -93,40 +91,38 @@ public class SamplerController {
     }
 
     private Node loadNode2(View view) {
-        return NODE_CACHE.computeIfAbsent(view, v -> {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource(v.getFxml()));
-                loader.setControllerFactory(param -> {
-                    if (param == SystemTrayDemoController.class) {
-                        return new SystemTrayDemoController(systemTrayFX);
-                    } else if (param == MenuItemsController.class) {
-                        return new MenuItemsController(this);
-                    } else if (param == TrayMenuItemDemoController.class) {
-                        return new TrayMenuItemDemoController(systemTrayFX);
-                    } else if (param == TrayExitMenuItemDemoController.class) {
-                        return new TrayExitMenuItemDemoController(systemTrayFX);
-                    } else if (param == TrayMenuDemoController.class) {
-                        return new TrayMenuDemoController(systemTrayFX);
-                    } else if (param == TrayCheckMenuItemDemoController.class) {
-                        return new TrayCheckMenuItemDemoController(systemTrayFX);
-                    } else if (param == FXMenuItemWrapperDemoController.class) {
-                        return new FXMenuItemWrapperDemoController(systemTrayFX);
-                    } else if (param == SeparatorDemoController.class) {
-                        return new SeparatorDemoController(systemTrayFX);
-                    } else {
-                        try {
-                            return param.getConstructor().newInstance();
-                        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException |
-                                 IllegalAccessException e) {
-                            throw new RuntimeException(e);
-                        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(view.getFxml()));
+            loader.setControllerFactory(param -> {
+                if (param == SystemTrayDemoController.class) {
+                    return new SystemTrayDemoController(systemTrayFX);
+                } else if (param == MenuItemsController.class) {
+                    return new MenuItemsController(this);
+                } else if (param == TrayMenuItemDemoController.class) {
+                    return new TrayMenuItemDemoController(systemTrayFX);
+                } else if (param == TrayExitMenuItemDemoController.class) {
+                    return new TrayExitMenuItemDemoController(systemTrayFX);
+                } else if (param == TrayMenuDemoController.class) {
+                    return new TrayMenuDemoController(systemTrayFX);
+                } else if (param == TrayCheckMenuItemDemoController.class) {
+                    return new TrayCheckMenuItemDemoController(systemTrayFX);
+                } else if (param == FXMenuItemWrapperDemoController.class) {
+                    return new FXMenuItemWrapperDemoController(systemTrayFX);
+                } else if (param == SeparatorDemoController.class) {
+                    return new SeparatorDemoController(systemTrayFX);
+                } else {
+                    try {
+                        return param.getConstructor().newInstance();
+                    } catch (InvocationTargetException | NoSuchMethodException | InstantiationException |
+                             IllegalAccessException e) {
+                        throw new RuntimeException(e);
                     }
-                });
-                return loader.load();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
+                }
+            });
+            return loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private TreeItem<Category> createTreeItem(String title, View view) {
