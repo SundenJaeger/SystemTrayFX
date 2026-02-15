@@ -70,7 +70,8 @@ public class SamplerController {
                 createTreeItem("TrayExitMenuItem", View.TRAY_EXIT_MENU_ITEM_DEMO),
                 createTreeItem("TrayCheckMenuItem", View.TRAY_CHECK_MENU_ITEM_DEMO),
                 createTreeItem("TrayMenu", View.TRAY_MENU_DEMO),
-                createTreeItem("FXMenuItemWrapper", View.FX_MENU_ITEM_WRAPPER_DEMO)
+                createTreeItem("FXMenuItemWrapper", View.FX_MENU_ITEM_WRAPPER_DEMO),
+                createTreeItem("Separator", View.SEPARATOR_DEMO)
         ));
 
         hidden.getChildren().addAll(List.of(
@@ -110,6 +111,8 @@ public class SamplerController {
                         return new TrayCheckMenuItemDemoController(systemTrayFX);
                     } else if (param == FXMenuItemWrapperDemoController.class) {
                         return new FXMenuItemWrapperDemoController(systemTrayFX);
+                    } else if (param == SeparatorDemoController.class) {
+                        return new SeparatorDemoController(systemTrayFX);
                     } else {
                         try {
                             return param.getConstructor().newInstance();

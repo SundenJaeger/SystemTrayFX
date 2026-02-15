@@ -25,7 +25,8 @@ public enum View {
     TRAY_EXIT_MENU_ITEM_DEMO("tray-exit-menu-item-demo-view"),
     TRAY_CHECK_MENU_ITEM_DEMO("tray-check-menu-item-demo-view"),
     TRAY_MENU_DEMO("tray-menu-demo-view"),
-    FX_MENU_ITEM_WRAPPER_DEMO("fx-menu-item-wrapper-demo-view");
+    FX_MENU_ITEM_WRAPPER_DEMO("fx-menu-item-wrapper-demo-view"),
+    SEPARATOR_DEMO("separator-demo-view");
 
     private static final String BASE_PATH = "/com/systemtray/samplerfx/views/";
     private final String fxml;

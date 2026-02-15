@@ -53,6 +53,6 @@ public class MenuItemsController {
 
     @FXML
     private void toSeparator() {
-
+        samplerController.navigateTo(View.SEPARATOR_DEMO);
     }
 }
