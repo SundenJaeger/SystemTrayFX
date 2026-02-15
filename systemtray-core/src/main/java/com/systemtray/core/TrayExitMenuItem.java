@@ -114,7 +114,7 @@ public class TrayExitMenuItem extends TrayMenuItem {
     public TrayExitMenuItem(String text, Image image) {
         super(Utils.safeText(DEFAULT_EXIT_TEXT, text), image);
         setOnAction(event -> {
-            display.asyncExec(this::dispose);
+            ctx.dispose();
             Platform.exit();
         });
     }
@@ -122,10 +122,5 @@ public class TrayExitMenuItem extends TrayMenuItem {
     @Override
     public void setText(String text) {
         super.setText(Utils.safeText(DEFAULT_EXIT_TEXT, text));
-    }
-
-    @Override
-    protected void dispose() {
-        ctx.dispose();
     }
 }
