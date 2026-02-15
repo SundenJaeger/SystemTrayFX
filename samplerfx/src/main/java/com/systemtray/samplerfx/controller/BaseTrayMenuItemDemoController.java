@@ -17,11 +17,8 @@
 package com.systemtray.samplerfx.controller;
 
 import com.systemtray.core.SystemTrayFX;
-import com.systemtray.core.TrayExitMenuItem;
 import com.systemtray.core.TrayMenuItem;
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
@@ -32,10 +29,6 @@ import java.io.File;
 public abstract class BaseTrayMenuItemDemoController extends BaseDemoController {
     private TrayMenuItem trayMenuItem;
 
-    @FXML
-    protected Button addTrayMenuItemButton;
-    @FXML
-    protected Button removeTrayMenuItemButton;
     @FXML
     protected CheckBox isDisabledCheckBox;
 
@@ -51,24 +44,7 @@ public abstract class BaseTrayMenuItemDemoController extends BaseDemoController 
         textPropertyTextField.disableProperty().bind(enableTextPropertyCheckBox.selectedProperty().not());
         chooseImageButton.disableProperty().bind(enableImagePropertyCheckBox.selectedProperty().not());
 
-        addTrayMenuItemButton.disableProperty().bind(Bindings.size(systemTrayFX.getItems()).greaterThanOrEqualTo(1));
-        removeTrayMenuItemButton.disableProperty().bind(addTrayMenuItemButton.disableProperty().not());
-    }
-
-    @FXML
-    protected void addTrayMenuItem() {
-        trayMenuItem = createMenuItem();
-        trayMenuItem.disableProperty().bind(isDisabledCheckBox.selectedProperty());
-        trayMenuItem.textProperty().bind(textPropertyTextField.textProperty());
-
-        systemTrayFX.addEntry(trayMenuItem);
-    }
-
-    @FXML
-    protected void removeTrayMenuItem() {
-        if (!systemTrayFX.getItems().isEmpty()) {
-            systemTrayFX.getItems().remove(trayMenuItem);
-        }
+        addTrayMenuItem();
     }
 
     @FXML
@@ -82,5 +58,13 @@ public abstract class BaseTrayMenuItemDemoController extends BaseDemoController 
         if (file != null) {
             trayMenuItem.setImage(new Image(file.toURI().toString()));
         }
+    }
+
+    private void addTrayMenuItem() {
+        trayMenuItem = createMenuItem();
+        trayMenuItem.disableProperty().bind(isDisabledCheckBox.selectedProperty());
+        trayMenuItem.textProperty().bind(textPropertyTextField.textProperty());
+
+        systemTrayFX.addEntry(trayMenuItem);
     }
 }
