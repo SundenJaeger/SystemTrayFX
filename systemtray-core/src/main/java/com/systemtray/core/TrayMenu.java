@@ -92,19 +92,11 @@ public class TrayMenu extends TrayMenuItem {
     /* ---------------- Constructors ---------------- */
 
     /**
-     * The SWT display for executing operations on the correct thread
-     */
-    private Display display;
-
-    /**
      * The SWT submenu containing child items
      */
     private Menu subMenu;
 
-    /**
-     * Reference to the parent system tray context
-     */
-    private SystemTrayFX ctx;
+    private MenuItem root;
 
     /* ---------------- Collections ---------------- */
 
@@ -258,10 +250,7 @@ public class TrayMenu extends TrayMenuItem {
      */
     @Override
     protected void create(Display display, Menu menu, SystemTrayFX ctx) {
-        this.display = display;
-        this.ctx = ctx;
-
-        MenuItem root = new MenuItem(menu, SWT.CASCADE);
+        root = new MenuItem(menu, SWT.CASCADE);
 
         applyInitialState(root, ctx);
         installBaseListeners(display, root, ctx);
@@ -272,5 +261,22 @@ public class TrayMenu extends TrayMenuItem {
         isInitialized = true;
         pendingItems.forEach(item -> item.create(display, subMenu, ctx));
         pendingItems.clear();
+    }
+
+    @Override
+    protected void dispose() {
+        if (isInitialized) {
+            items.clear();
+        }
+
+        if (root != null && !root.isDisposed()) {
+            root.dispose();
+        }
+
+        if (subMenu != null && !subMenu.isDisposed()) {
+            subMenu.dispose();
+        }
+
+        super.dispose();
     }
 }
