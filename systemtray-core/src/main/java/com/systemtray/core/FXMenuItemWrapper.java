@@ -92,6 +92,8 @@ public class FXMenuItemWrapper extends TrayMenuItem {
      */
     private final javafx.scene.control.MenuItem fxItem;
 
+    private MenuItem swtMenuItem;
+
     /* ---------------- Constructors ---------------- */
 
     /**
@@ -139,20 +141,20 @@ public class FXMenuItemWrapper extends TrayMenuItem {
      */
     @Override
     protected void create(Display display, Menu menu, SystemTrayFX ctx) {
-        org.eclipse.swt.widgets.MenuItem menuItem = new MenuItem(menu, getSWTStyle());
+        swtMenuItem = new MenuItem(menu, getSWTStyle());
 
         setText(fxItem.getText());
         setDisable(fxItem.isDisable());
         setOnAction(fxItem.getOnAction());
 
-        applyInitialState(menuItem, ctx);
-        installBaseListeners(display, menuItem, ctx);
-        installSubclassListeners(display, menuItem, ctx);
+        applyInitialState(swtMenuItem, ctx);
+        installBaseListeners(display, swtMenuItem, ctx);
+        installSubclassListeners(display, swtMenuItem, ctx);
 
         fxItem.textProperty().addListener((observable, oldValue, newValue) -> {
             if (display == null || display.isDisposed()) return;
 
-            if (!menuItem.isDisposed()) {
+            if (!swtMenuItem.isDisposed()) {
                 display.asyncExec(() -> setText(newValue));
             }
         });
@@ -160,7 +162,7 @@ public class FXMenuItemWrapper extends TrayMenuItem {
         fxItem.disableProperty().addListener((observable, oldValue, newValue) -> {
             if (display == null || display.isDisposed()) return;
 
-            if (!menuItem.isDisposed()) {
+            if (!swtMenuItem.isDisposed()) {
                 display.asyncExec(() -> setDisable(newValue));
             }
         });
@@ -221,5 +223,14 @@ public class FXMenuItemWrapper extends TrayMenuItem {
                 }
             });
         }
+    }
+
+    @Override
+    protected void dispose() {
+        if (swtMenuItem != null && !swtMenuItem.isDisposed()) {
+            swtMenuItem.dispose();
+        }
+
+        super.dispose();
     }
 }
