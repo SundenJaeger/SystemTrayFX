@@ -20,25 +20,14 @@ import com.systemtray.core.SystemTrayFX;
 import com.systemtray.core.TrayCheckMenuItem;
 import com.systemtray.core.TrayMenuItem;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ToggleButton;
 
 public class TrayCheckMenuItemDemoController extends BaseTrayMenuItemDemoController {
-    @FXML
-    private CheckBox enableSelectedPropertyCheckBox;
     @FXML
     private ToggleButton clickMeButton;
 
     public TrayCheckMenuItemDemoController(SystemTrayFX systemTrayFX) {
         super(systemTrayFX);
-    }
-
-    @FXML
-    @Override
-    protected void initialize() {
-        super.initialize();
-
-        clickMeButton.disableProperty().bind(enableSelectedPropertyCheckBox.selectedProperty().not());
     }
 
     @Override

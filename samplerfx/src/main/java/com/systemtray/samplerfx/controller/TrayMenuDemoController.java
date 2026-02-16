@@ -18,27 +18,12 @@ package com.systemtray.samplerfx.controller;
 
 import com.systemtray.core.*;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
-import javafx.scene.layout.HBox;
 
 public class TrayMenuDemoController extends BaseTrayMenuItemDemoController {
     private TrayMenu trayMenu;
 
-    @FXML
-    private CheckBox enableAddMenuItemsCheckBox;
-    @FXML
-    private HBox addMenuItemsContainer;
-
     public TrayMenuDemoController(SystemTrayFX systemTrayFX) {
         super(systemTrayFX);
-    }
-
-    @FXML
-    @Override
-    protected void initialize() {
-        super.initialize();
-
-        addMenuItemsContainer.disableProperty().bind(enableAddMenuItemsCheckBox.selectedProperty().not());
     }
 
     @Override

@@ -89,11 +89,11 @@
                         <Separator />
                         <VBox layoutX="10.0" layoutY="81.0" spacing="5.0">
                            <children>
-                              <CheckBox fx:id="enableSelectedPropertyCheckBox" mnemonicParsing="false" text="Enable selectedProperty">
+                              <Label text="SelectedProperty">
                                  <font>
-                                    <Font name="Segoe UI Semilight" size="14.0" />
+                                    <Font name="Segoe UI Semilight" size="15.0" />
                                  </font>
-                              </CheckBox>
+                              </Label>
                               <HBox spacing="5.0">
                                  <children>
                                     <ToggleButton fx:id="clickMeButton" mnemonicParsing="false" text="Click Me">
@@ -108,22 +108,22 @@
                         <Separator prefWidth="200.0" />
                         <VBox spacing="5.0">
                            <children>
-                              <CheckBox fx:id="enableTextPropertyCheckBox" mnemonicParsing="false" text="Enable TextProperty">
+                              <Label text="TextProperty">
                                  <font>
-                                    <Font name="Segoe UI Semilight" size="14.0" />
+                                    <Font name="Segoe UI Semilight" size="15.0" />
                                  </font>
-                              </CheckBox>
+                              </Label>
                               <TextField fx:id="textPropertyTextField" maxHeight="-Infinity" text="Sample TrayCheckMenuItem" />
                            </children>
                         </VBox>
                         <Separator />
                         <VBox spacing="5.0">
                            <children>
-                              <CheckBox fx:id="enableImagePropertyCheckBox" mnemonicParsing="false" text="Enable ImageProperty">
+                              <Label text="ImageProperty">
                                  <font>
-                                    <Font name="Segoe UI Semilight" size="14.0" />
+                                    <Font name="Segoe UI Semilight" size="15.0" />
                                  </font>
-                              </CheckBox>
+                              </Label>
                               <HBox>
                                  <children>
                                     <Button fx:id="chooseImageButton" mnemonicParsing="false" onAction="#chooseImage" text="Choose Image" />

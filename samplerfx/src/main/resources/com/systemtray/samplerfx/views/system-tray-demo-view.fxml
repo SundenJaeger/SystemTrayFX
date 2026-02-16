@@ -90,22 +90,22 @@
                         <Separator />
                         <VBox spacing="5.0">
                            <children>
-                              <CheckBox fx:id="enableTextPropertyCheckBox" mnemonicParsing="false" text="Enable TextProperty">
+                              <Label text="TextProperty">
                                  <font>
-                                    <Font name="Segoe UI Semilight" size="14.0" />
+                                    <Font name="Segoe UI Semilight" size="15.0" />
                                  </font>
-                              </CheckBox>
+                              </Label>
                               <TextField fx:id="textPropertyTextField" maxHeight="-Infinity" text="SystemTrayFX Sampler" />
                            </children>
                         </VBox>
                         <Separator />
                         <VBox spacing="5.0">
                            <children>
-                              <CheckBox fx:id="enableImagePropertyCheckBox" mnemonicParsing="false" text="Enable ImageProperty">
+                              <Label text="ImageProperty">
                                  <font>
-                                    <Font name="Segoe UI Semilight" size="14.0" />
+                                    <Font name="Segoe UI Semilight" size="15.0" />
                                  </font>
-                              </CheckBox>
+                              </Label>
                               <HBox>
                                  <children>
                                     <Button fx:id="chooseImageButton" mnemonicParsing="false" onAction="#chooseImage" text="Choose Image" />

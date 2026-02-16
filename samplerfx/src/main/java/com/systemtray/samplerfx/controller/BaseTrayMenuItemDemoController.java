@@ -41,9 +41,6 @@ public abstract class BaseTrayMenuItemDemoController extends BaseDemoController 
     @FXML
     @Override
     protected void initialize() {
-        textPropertyTextField.disableProperty().bind(enableTextPropertyCheckBox.selectedProperty().not());
-        chooseImageButton.disableProperty().bind(enableImagePropertyCheckBox.selectedProperty().not());
-
         addTrayMenuItem();
     }
 

@@ -17,8 +17,6 @@
 package com.systemtray.samplerfx.controller;
 
 import com.systemtray.core.SystemTrayFX;
-import com.systemtray.core.TrayMenuItem;
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -35,11 +33,7 @@ public abstract class BaseDemoController {
     @FXML
     protected CheckBox isMinimizeToTrayCheckBox;
     @FXML
-    protected CheckBox enableTextPropertyCheckBox;
-    @FXML
     protected TextField textPropertyTextField;
-    @FXML
-    protected CheckBox enableImagePropertyCheckBox;
     @FXML
     protected Button chooseImageButton;
 
@@ -51,9 +45,6 @@ public abstract class BaseDemoController {
     protected void initialize() {
         systemTrayFX.minimizeToTrayProperty().bind(isMinimizeToTrayCheckBox.selectedProperty());
         systemTrayFX.titleProperty().bind(textPropertyTextField.textProperty());
-
-        textPropertyTextField.disableProperty().bind(enableTextPropertyCheckBox.selectedProperty().not());
-        chooseImageButton.disableProperty().bind(enableImagePropertyCheckBox.selectedProperty().not());
     }
 
     @FXML
