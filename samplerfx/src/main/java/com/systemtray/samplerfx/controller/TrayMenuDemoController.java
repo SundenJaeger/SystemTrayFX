@@ -73,4 +73,11 @@ public class TrayMenuDemoController extends BaseTrayMenuItemDemoController {
             trayMenu.getItems().add(new Separator());
         }
     }
+
+    @FXML
+    private void removeAllItems() {
+        if (trayMenu != null) {
+            trayMenu.getItems().clear();
+        }
+    }
 }
