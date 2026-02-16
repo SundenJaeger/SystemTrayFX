@@ -96,6 +96,8 @@ public class TrayMenu extends TrayMenuItem {
      */
     private Menu subMenu;
 
+    private Display display;
+
     private MenuItem root;
 
     /* ---------------- Collections ---------------- */
@@ -250,6 +252,8 @@ public class TrayMenu extends TrayMenuItem {
      */
     @Override
     protected void create(Display display, Menu menu, SystemTrayFX ctx) {
+        this.display = display;
+
         root = new MenuItem(menu, SWT.CASCADE);
 
         applyInitialState(root, ctx);
