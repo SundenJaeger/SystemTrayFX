@@ -16,26 +16,19 @@
 
 package com.systemtray.core;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+
 import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * A facade for displaying system tray notifications with support for various notification types.
+ * A utility class for displaying system tray notifications.
  *
  * <p><strong>Usage Examples:</strong>
  * <pre>{@code
- * // Simple notification
  * Notification.info("Update Available", "Version 2.0 is ready to install");
- *
- * // Custom notification with action
- * Notification.builder()
- *     .title("Task Complete")
- *     .message("Your file has been processed")
- *     .timeout(5000)
- *     .type(NotificationType.INFORMATION)
- *     .action(() -> openFile())
- *     .show();
  * }</pre>
  *
  * <p>This is a utility class with static methods only and cannot be instantiated.
@@ -44,13 +37,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * @see NotificationType
  */
 public final class Notification {
-
-    /* ---------------- Constants ---------------- */
-
-    /**
-     * Default notification display timeout in milliseconds (3 seconds)
-     */
-    private final static int DEFAULT_TIMEOUT = 3000;
 
     /* ---------------- Static Fields ---------------- */
 
@@ -78,63 +64,72 @@ public final class Notification {
     /* ---------------- Public API ---------------- */
 
     /**
-     * Displays an information notification with default timeout.
+     * Displays an information notification.
      *
-     * <p>This is a convenience method equivalent to:
-     * <pre>{@code
-     * Notification.builder()
-     *     .title(title)
-     *     .message(message)
-     *     .type(NotificationType.INFORMATION)
-     *     .show();
-     * }</pre>
-     *
-     * @param title the notification title
+     * @param title   the notification title
      * @param message the notification message
      * @throws NullPointerException if title or message is null
      */
     public static void info(String title, String message) {
-        build(title, message, NotificationType.INFORMATION);
+        info(title, message, null);
     }
 
     /**
-     * Displays a warning notification with default timeout.
+     * Displays an information notification.
      *
-     * <p>This is a convenience method equivalent to:
-     * <pre>{@code
-     * Notification.builder()
-     *     .title(title)
-     *     .message(message)
-     *     .type(NotificationType.WARNING)
-     *     .show();
-     * }</pre>
+     * @param title    the notification title
+     * @param message  the notification message
+     * @param onAction optional action invoked when the notification is clicked
+     * @throws NullPointerException if title or message is null
+     */
+    public static void info(String title, String message, EventHandler<ActionEvent> onAction) {
+        build(title, message, NotificationType.INFORMATION, onAction);
+    }
+
+    /**
+     * Displays a warning notification.
      *
-     * @param title the notification title
+     * @param title   the notification title
      * @param message the notification message
      * @throws NullPointerException if title or message is null
      */
     public static void warn(String title, String message) {
-        build(title, message, NotificationType.WARNING);
+        warn(title, message, null);
     }
 
     /**
-     * Displays an error notification with default timeout.
+     * Displays a warning notification.
      *
-     * <p>This is a convenience method equivalent to:
-     * <pre>{@code
-     * Notification.builder()
-     *     .title(title)
-     *     .message(message)
-     *     .type(NotificationType.ERROR)
-     *     .show();
-     * }</pre>
+     * @param title    the notification title
+     * @param message  the notification message
+     * @param onAction optional action invoked when the notification is clicked
+     * @throws NullPointerException if title or message is null
+     */
+    public static void warn(String title, String message, EventHandler<ActionEvent> onAction) {
+        build(title, message, NotificationType.WARNING, onAction);
+    }
+
+    /**
+     * Displays an error notification.
      *
-     * @param title the notification title
+     * @param title   the notification title
      * @param message the notification message
      * @throws NullPointerException if title or message is null
      */
     public static void error(String title, String message) {
-        build(title, message, NotificationType.ERROR);
+        error(title, message, null);
+    }
+
+    /**
+     * Displays an error notification.
+     *
+     * @param title    the notification title
+     * @param message  the notification message
+     * @param onAction optional action invoked when the notification is clicked
+     * @throws NullPointerException if title or message is null
+     */
+    public static void error(String title, String message, EventHandler<ActionEvent> onAction) {
+        build(title, message, NotificationType.ERROR, onAction);
     }
 
     /**
@@ -183,144 +178,21 @@ public final class Notification {
      *
      * <p>If the tray is not yet initialized, the notification is queued for later display.
      *
-     * @param title the notification title
+     * @param title   the notification title
      * @param message the notification message
-     * @param type the notification type
+     * @param type    the notification type
      * @throws NullPointerException if title or message is null
      */
-    private static void build(String title, String message, NotificationType type) {
+    private static void build(String title, String message, NotificationType type, EventHandler<ActionEvent> onAction) {
         Objects.requireNonNull(title, "Title cannot be null");
         Objects.requireNonNull(message, "Message cannot be null");
 
-        Runnable task = () -> tray.show(title, message, DEFAULT_TIMEOUT, type, null);
+        Runnable task = () -> tray.show(title, message, type, onAction);
 
         if (tray == null) {
             pending.offer(task);
         } else {
             task.run();
-        }
-    }
-
-    /* ---------------- Builder ---------------- */
-
-    /**
-     * Creates a new notification builder for customized notifications.
-     *
-     * <p>The builder pattern allows for fine-grained control over notification
-     * properties including timeout, type, and custom actions.
-     *
-     * @return a new Builder instance
-     * @see Builder
-     */
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    /**
-     * Builder for creating customized notifications with fine-grained control.
-     *
-     * <p>The builder uses method chaining for a fluent API:
-     * <pre>{@code
-     * Notification.builder()
-     *     .title("Download Complete")
-     *     .message("Your file is ready")
-     *     .timeout(5000)
-     *     .type(NotificationType.INFORMATION)
-     *     .action(() -> System.out.println("Notification clicked"))
-     *     .show();
-     * }</pre>
-     *
-     * <p>Only {@code title} and {@code message} are required. All other properties
-     * have sensible defaults.
-     */
-    public static class Builder {
-        private String title;
-        private String message;
-        private int timeout = DEFAULT_TIMEOUT;
-        private NotificationType type = NotificationType.NONE;
-        private Runnable action;
-
-        /**
-         * Sets the notification title.
-         *
-         * @param title the title text (required)
-         * @return this Builder instance for method chaining
-         */
-        public Builder title(String title) {
-            this.title = title;
-            return this;
-        }
-
-        /**
-         * Sets the notification message.
-         *
-         * @param message the message text (required)
-         * @return this Builder instance for method chaining
-         */
-        public Builder message(String message) {
-            this.message = message;
-            return this;
-        }
-
-        /**
-         * Sets the notification timeout duration.
-         *
-         * <p>Default is 3000ms (3 seconds).
-         *
-         * @param timeout the timeout in milliseconds
-         * @return this Builder instance for method chaining
-         */
-        public Builder timeout(int timeout) {
-            this.timeout = timeout;
-            return this;
-        }
-
-        /**
-         * Sets the notification type (affects icon and styling).
-         *
-         * <p>Default is {@link NotificationType#NONE}.
-         *
-         * @param type the notification type
-         * @return this Builder instance for method chaining
-         */
-        public Builder type(NotificationType type) {
-            this.type = type;
-            return this;
-        }
-
-        /**
-         * Sets an action to execute when the notification is clicked.
-         *
-         * <p>The action is executed on the SWT thread. For JavaFX operations,
-         * wrap the code in {@code Platform.runLater()}.
-         *
-         * @param action the action to execute (optional)
-         * @return this Builder instance for method chaining
-         */
-        public Builder action(Runnable action) {
-            this.action = action;
-            return this;
-        }
-
-        /**
-         * Builds and displays the notification.
-         *
-         * <p>If the tray is not yet initialized, the notification is queued
-         * and will be displayed when the tray becomes available.
-         *
-         * @throws NullPointerException if title or message is null
-         */
-        public void show() {
-            Objects.requireNonNull(title, "Title cannot be null.");
-            Objects.requireNonNull(message, "Message cannot be null.");
-
-            Runnable task = () -> tray.show(title, message, timeout, type, action);
-
-            if (tray == null) {
-                pending.offer(task);
-            } else {
-                task.run();
-            }
         }
     }
 }

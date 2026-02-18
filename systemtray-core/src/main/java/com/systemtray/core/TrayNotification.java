@@ -17,6 +17,8 @@
 package com.systemtray.core;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -57,8 +59,8 @@ final class TrayNotification {
     /**
      * Creates a new tray notification handler.
      *
-     * @param display the SWT display
-     * @param shell the parent shell for tooltips
+     * @param display  the SWT display
+     * @param shell    the parent shell for tooltips
      * @param trayItem the tray icon to attach notifications to
      */
     TrayNotification(Display display, Shell shell, TrayItem trayItem) {
@@ -78,13 +80,12 @@ final class TrayNotification {
      * <p>If an action is provided, the notification becomes clickable. Clicking it
      * will execute the action on the JavaFX thread via {@link Platform#runLater}.
      *
-     * @param title the notification title
+     * @param title   the notification title
      * @param message the notification message text
-     * @param timeout auto-hide timeout in milliseconds (0 or negative = no auto-hide)
-     * @param icon the notification icon type
-     * @param action optional action to run when notification is clicked (may be null)
+     * @param icon    the notification icon type
+     * @param onAction  optional action to run when notification is clicked (may be null)
      */
-    void show(String title, String message, int timeout, NotificationType icon, Runnable action) {
+    void show(String title, String message, NotificationType icon, EventHandler<ActionEvent> onAction) {
         if (display == null || display.isDisposed()) return;
 
         display.asyncExec(() -> {
@@ -117,23 +118,18 @@ final class TrayNotification {
             toolTip.setText(title);
             toolTip.setMessage(message);
             toolTip.setVisible(true);
-            selectionAdapter = new SelectionAdapter() {
-                @Override
-                public void widgetSelected(SelectionEvent e) {
-                    if (action != null) {
-                        Platform.runLater(action);
-                    }
-                }
-            };
-            toolTip.addSelectionListener(selectionAdapter);
 
-            if (timeout > 0) {
-                display.timerExec(timeout, () -> {
-                    if (toolTip != null && !toolTip.isDisposed()) {
-                        toolTip.setVisible(false);
+            if (onAction != null) {
+                selectionAdapter = new SelectionAdapter() {
+                    @Override
+                    public void widgetSelected(SelectionEvent e) {
+                        Platform.runLater(() -> onAction.handle(new ActionEvent(this, null)));
                     }
-                });
+                };
+                toolTip.addSelectionListener(selectionAdapter);
             }
+
+            toolTip.setAutoHide(true);
         });
     }
 
