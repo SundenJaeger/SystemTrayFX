@@ -71,10 +71,13 @@ public class SamplerController {
                 createTreeItem("Separator", View.SEPARATOR_DEMO)
         ));
 
+        TreeItem<Category> notifications = createTreeItem("Notifications", View.NOTIFICATIONS);
+
         hidden.getChildren().addAll(List.of(
                 home,
                 systemTray,
-                menuItems
+                menuItems,
+                notifications
         ));
 
         treeView.setRoot(hidden);
