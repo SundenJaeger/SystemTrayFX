@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.rentoki</groupId>
+        <artifactId>SystemTray</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>swt-modular</artifactId>
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.eclipse.platform</groupId>
+            <artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
+            <version>${lib.swt.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.moditect</groupId>
+                <artifactId>moditect-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-swt-module-info</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>add-module-info</goal>
+                        </goals>
+                        <configuration>
+                            <overwriteExistingFiles>true</overwriteExistingFiles>
+                            <outputDirectory>${project.build.directory}/modules</outputDirectory>
+                            <modules>
+                                <module>
+                                    <artifact>
+                                        <groupId>org.eclipse.platform</groupId>
+                                        <artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
+                                        <version>${lib.swt.version}</version>
+                                    </artifact>
+                                    <moduleInfoSource>
+                                        module org.eclipse.swt.win32.win32.x86_64 {
+
+                                        exports org.eclipse.swt.awt;
+                                        exports org.eclipse.swt.accessibility;
+                                        exports org.eclipse.swt.browser;
+                                        exports org.eclipse.swt.custom;
+                                        exports org.eclipse.swt.dnd;
+                                        exports org.eclipse.swt.internal.ole.win32;
+                                        exports org.eclipse.swt.internal.opengl.win32;
+                                        exports org.eclipse.swt.internal.gdip;
+                                        exports org.eclipse.swt.internal.win32.version;
+                                        exports org.eclipse.swt.internal.win32;
+                                        exports org.eclipse.swt.internal.image;
+                                        exports org.eclipse.swt.internal;
+                                        exports org.eclipse.swt.ole.win32;
+                                        exports org.eclipse.swt.opengl;
+                                        exports org.eclipse.swt.printing;
+                                        exports org.eclipse.swt.program;
+                                        exports org.eclipse.swt.events;
+                                        exports org.eclipse.swt.graphics;
+                                        exports org.eclipse.swt.layout;
+                                        exports org.eclipse.swt.widgets;
+                                        exports org.eclipse.swt;
+                                        }
+                                    </moduleInfoSource>
+                                </module>
+                            </modules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-swt-sources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.eclipse.platform</groupId>
+                                    <artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
+                                    <version>${lib.swt.version}</version>
+                                    <classifier>sources</classifier>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.eclipse.platform</groupId>
+                                    <artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
+                                    <version>${lib.swt.version}</version>
+                                    <classifier>javadoc</classifier>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>install-patched-swt</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>
+                                ${project.build.directory}/modules/org.eclipse.swt.win32.win32.x86_64-${lib.swt.version}.jar
+                            </file>
+                            <groupId>org.eclipse.platform</groupId>
+                            <artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
+                            <version>${lib.swt.modular.version}</version>
+                            <packaging>jar</packaging>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-patched-swt-sources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>
+                                ${project.build.directory}/org.eclipse.swt.win32.win32.x86_64-${lib.swt.version}-sources.jar
+                            </file>
+                            <groupId>org.eclipse.platform</groupId>
+                            <artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
+                            <version>${lib.swt.modular.version}</version>
+                            <packaging>jar</packaging>
+                            <classifier>sources</classifier>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-patched-swt-javadoc</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>
+                                ${project.build.directory}/org.eclipse.swt.win32.win32.x86_64-${lib.swt.version}-javadoc.jar
+                            </file>
+                            <groupId>org.eclipse.platform</groupId>
+                            <artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
+                            <version>${lib.swt.modular.version}</version>
+                            <packaging>jar</packaging>
+                            <classifier>javadoc</classifier>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
