@@ -19,10 +19,7 @@ package com.systemtray.samplerfx.controller;
 import com.systemtray.core.SystemTrayFX;
 import com.systemtray.core.TrayMenuItem;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -30,7 +27,17 @@ import javafx.stage.Stage;
 import java.io.File;
 
 public class SystemTrayDemoController extends BaseDemoController {
+    @FXML
+    private Label noteTextField;
+
     public SystemTrayDemoController(SystemTrayFX systemTrayFX) {
         super(systemTrayFX);
+    }
+
+    @FXML
+    protected void initialize() {
+        super.initialize();
+
+        noteTextField.visibleProperty().bind(isMinimizeToTrayCheckBox.selectedProperty());
     }
 }

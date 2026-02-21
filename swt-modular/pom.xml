@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>swt-modular</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <properties>
         <maven.compiler.source>25</maven.compiler.source>

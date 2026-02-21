@@ -85,6 +85,8 @@ public class SamplerController {
 
         treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null && newValue.getValue().view() != null) {
+                systemTrayFX.minimizeToTrayProperty().unbind();
+                systemTrayFX.setMinimizeToTray(false);
                 systemTrayFX.getItems().clear();
                 borderPane.setCenter(loadNode2(newValue.getValue().view()));
             }

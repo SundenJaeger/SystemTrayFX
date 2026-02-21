@@ -79,14 +79,26 @@
                   </Label>
                   <VBox spacing="5.0" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
                      <children>
-                        <CheckBox fx:id="isMinimizeToTrayCheckBox" mnemonicParsing="false" text="isMinimizeToTray">
-                           <font>
-                              <Font name="Segoe UI Semilight" size="14.0" />
-                           </font>
-                           <tooltip>
-                              <Tooltip text="Setting this to true will make the stage not exit." />
-                           </tooltip>
-                        </CheckBox>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <CheckBox fx:id="isMinimizeToTrayCheckBox" minWidth="-Infinity" mnemonicParsing="false" text="isMinimizeToTray">
+                                 <font>
+                                    <Font name="Segoe UI Semilight" size="15.0" />
+                                 </font>
+                                 <tooltip>
+                                    <Tooltip text="Setting this to true will make the stage not exit." />
+                                 </tooltip>
+                              </CheckBox>
+                              <Label fx:id="noteTextField" text="Note: If this is enabled, you must add a TrayExitMenuItem, or call dispose() in a shutdown hook to properly exit the application." wrapText="true">
+                                 <font>
+                                    <Font name="Segoe UI Semilight Italic" size="15.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="40.0" />
+                                 </HBox.margin>
+                              </Label>
+                           </children>
+                        </HBox>
                         <Separator />
                         <VBox spacing="5.0">
                            <children>

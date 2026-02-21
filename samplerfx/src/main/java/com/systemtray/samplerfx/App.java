@@ -20,6 +20,8 @@ import com.systemtray.core.*;
 import com.systemtray.samplerfx.controller.SamplerController;
 import com.systemtray.samplerfx.enums.View;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -55,6 +57,12 @@ public class App extends Application {
         stage.setTitle("SystemTrayFX Sampler");
         stage.setScene(scene);
         stage.show();
+
+        stage.showingProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue && systemTrayFX.isMinimizeToTray()) {
+                Notification.info("SamplerFX is minimized to tray", "SamplerFX keeps running in the background and can be accessed from the system tray or by clicking this notification.", event -> stage.show());
+            }
+        });
     }
 
 
