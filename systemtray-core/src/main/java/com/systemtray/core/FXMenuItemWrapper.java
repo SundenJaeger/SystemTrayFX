@@ -24,6 +24,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * A wrapper that adapts JavaFX menu items for use in the system tray.
  *
@@ -94,6 +98,8 @@ public class FXMenuItemWrapper extends TrayMenuItem {
 
     private MenuItem swtMenuItem;
 
+    private final Map<javafx.scene.control.MenuItem, FXMenuItemWrapper> childWrappers = new LinkedHashMap<>();
+
     /* ---------------- Constructors ---------------- */
 
     /**
@@ -159,6 +165,14 @@ public class FXMenuItemWrapper extends TrayMenuItem {
             }
         });
 
+        fxItem.onActionProperty().addListener(((observable, oldValue, newValue) -> {
+            if (display == null || display.isDisposed()) return;
+
+            if (!swtMenuItem.isDisposed()) {
+                display.asyncExec(() -> setOnAction(newValue));
+            }
+        }));
+
         fxItem.disableProperty().addListener((observable, oldValue, newValue) -> {
             if (display == null || display.isDisposed()) return;
 
@@ -204,6 +218,7 @@ public class FXMenuItemWrapper extends TrayMenuItem {
             for (javafx.scene.control.MenuItem item : fxMenu.getItems()) {
                 FXMenuItemWrapper wrapper = new FXMenuItemWrapper(item);
                 wrapper.create(display, swtSubMenu, ctx);
+                childWrappers.put(item, wrapper);
             }
 
             fxMenu.getItems().addListener((javafx.collections.ListChangeListener<javafx.scene.control.MenuItem>) change -> {
@@ -216,9 +231,23 @@ public class FXMenuItemWrapper extends TrayMenuItem {
                                 for (javafx.scene.control.MenuItem item : change.getAddedSubList()) {
                                     FXMenuItemWrapper wrapper = new FXMenuItemWrapper(item);
                                     wrapper.create(display, swtSubMenu, ctx);
+                                    childWrappers.put(item, wrapper);
                                 }
                             }
                         });
+                    }
+
+                    if (change.wasRemoved()) {
+                        if (display == null || display.isDisposed()) return;
+
+                        List<javafx.scene.control.MenuItem> removed = List.copyOf(change.getRemoved());
+
+                        display.asyncExec(() -> removed.forEach(item -> {
+                            FXMenuItemWrapper wrapper = childWrappers.remove(item);
+                            if (wrapper != null) {
+                                wrapper.dispose();
+                            }
+                        }));
                     }
                 }
             });
