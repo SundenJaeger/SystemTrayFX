@@ -91,13 +91,8 @@ public class TrayMenu extends TrayMenuItem {
 
     /* ---------------- Constructors ---------------- */
 
-    /**
-     * The SWT submenu containing child items
-     */
     private Menu subMenu;
-
     private Display display;
-
     private MenuItem root;
 
     /* ---------------- Collections ---------------- */

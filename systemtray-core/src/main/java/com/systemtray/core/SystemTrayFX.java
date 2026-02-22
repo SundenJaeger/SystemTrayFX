@@ -113,10 +113,6 @@ public class SystemTrayFX implements ISystemTray {
     private Shell shell;
     private Menu menu;
     private TrayItem trayItem;
-
-    /**
-     * Handler for tray notifications
-     */
     private TrayNotification trayNotification;
 
     /* ---------------- Collections ---------------- */
@@ -277,10 +273,20 @@ public class SystemTrayFX implements ISystemTray {
         return title;
     }
 
+    /**
+     * Returns the image property for tray icon.
+     *
+     * @return the ObjectProperty representing the tray icon image.
+     */
     public ObjectProperty<Image> imageProperty() {
         return image;
     }
 
+    /**
+     * Returns the property indicating whether the application should minimize to tray.
+     *
+     * @return BooleanProperty representing the minimize-to-tray setting
+     */
     public BooleanProperty minimizeToTrayProperty() {
         return minimizeToTray;
     }
@@ -325,10 +331,20 @@ public class SystemTrayFX implements ISystemTray {
         image.set(trayIcon);
     }
 
+    /**
+     * Gets the current minimize-to-tray setting.
+     *
+     * @return {@code true} if the application is set to minimize to tray, {@code false} otherwise
+     */
     public boolean isMinimizeToTray() {
         return minimizeToTray.get();
     }
 
+    /**
+     * Sets whether the application should minimize to the tray.
+     *
+     * @param minimizeToTray the new minimize-to-tray setting
+     */
     public void setMinimizeToTray(boolean minimizeToTray) {
         this.minimizeToTray.set(minimizeToTray);
     }

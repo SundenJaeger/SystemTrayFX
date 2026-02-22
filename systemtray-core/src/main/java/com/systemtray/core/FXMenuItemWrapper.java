@@ -91,13 +91,8 @@ public class FXMenuItemWrapper extends TrayMenuItem {
 
     /* ---------------- Fields ---------------- */
 
-    /**
-     * The wrapped JavaFX menu item
-     */
     private final javafx.scene.control.MenuItem fxItem;
-
     private MenuItem swtMenuItem;
-
     private final Map<javafx.scene.control.MenuItem, FXMenuItemWrapper> childWrappers = new LinkedHashMap<>();
 
     /* ---------------- Constructors ---------------- */
