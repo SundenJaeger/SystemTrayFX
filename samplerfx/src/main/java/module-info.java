@@ -1,14 +1,14 @@
-module com.rentoki {
+module systemtrayfx.samplerfx {
     requires javafx.controls;
     requires javafx.fxml;
-    requires com.systemtray.core;
+    requires systemtrayfx.core;
 
-    opens com.systemtray.samplerfx to javafx.fxml;
-    exports com.systemtray.samplerfx;
-    exports com.systemtray.samplerfx.controller;
-    opens com.systemtray.samplerfx.controller to javafx.fxml;
-    exports com.systemtray.samplerfx.model;
-    opens com.systemtray.samplerfx.model to javafx.fxml;
-    exports com.systemtray.samplerfx.enums;
-    opens com.systemtray.samplerfx.enums to javafx.fxml;
+    opens systemtrayfx.samplerfx to javafx.fxml;
+    exports systemtrayfx.samplerfx;
+    exports systemtrayfx.samplerfx.controller;
+    opens systemtrayfx.samplerfx.controller to javafx.fxml;
+    exports systemtrayfx.samplerfx.model;
+    opens systemtrayfx.samplerfx.model to javafx.fxml;
+    exports systemtrayfx.samplerfx.enums;
+    opens systemtrayfx.samplerfx.enums to javafx.fxml;
 }

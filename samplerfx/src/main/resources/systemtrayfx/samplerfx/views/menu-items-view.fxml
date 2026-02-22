@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<!--
+  ~ Copyright (C) 2026 Rentoki
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+
+<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="systemtrayfx.samplerfx.controller.MenuItemsController">
+   <top>
+      <VBox BorderPane.alignment="TOP_LEFT">
+         <children>
+            <Label text="Menu Items">
+               <font>
+                  <Font name="Segoe UI Semibold" size="30.0" />
+               </font>
+            </Label>
+            <Label text="SystemTrayFX various menu items." wrapText="true">
+               <font>
+                  <Font name="Segoe UI Semilight" size="15.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+   </top>
+   <center>
+      <VBox spacing="5.0" BorderPane.alignment="TOP_LEFT">
+         <children>
+            <Button mnemonicParsing="false" onAction="#toTrayMenuItem" text="TrayMenuItem" />
+            <Button mnemonicParsing="false" onAction="#toTrayExitMenuItem" text="TrayExitMenuItem" />
+            <Button mnemonicParsing="false" onAction="#toTrayCheckMenuItem" text="TrayCheckMenuItem" />
+            <Button mnemonicParsing="false" onAction="#toTrayMenu" text="TrayMenu" />
+            <Button mnemonicParsing="false" onAction="#toFXMenuItemWrapper" text="FXMenuItemWrapper" />
+            <Button mnemonicParsing="false" onAction="#toSeparator" text="Separator" />
+         </children>
+         <BorderPane.margin>
+            <Insets top="10.0" />
+         </BorderPane.margin>
+      </VBox>
+   </center>
+   <padding>
+      <Insets left="10.0" />
+   </padding>
+</BorderPane>

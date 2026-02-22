@@ -2,8 +2,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.rentoki</groupId>
-        <artifactId>SystemTray</artifactId>
+        <groupId>io.github.sundenjaeger</groupId>
+        <artifactId>SystemTrayFX</artifactId>
         <version>1.0.0</version>
     </parent>
 
@@ -17,8 +17,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.rentoki</groupId>
-            <artifactId>systemtray-core</artifactId>
+            <groupId>io.github.sundenjaeger</groupId>
+            <artifactId>systemtrayfx-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -48,7 +48,7 @@
                         <!-- Usage: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.systemtray.samplerfx.App</mainClass>
+                            <mainClass>systemtrayfx.samplerfx.App</mainClass>
                             <launcher>SamplerFX</launcher>
                             <jlinkZipName>SamplerFX</jlinkZipName>
                             <jlinkImageName>SamplerFX</jlinkImageName>

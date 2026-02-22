@@ -9,5 +9,7 @@
     <file url="file://$PROJECT_DIR$/swt-modular/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/systemtray-core/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/systemtray-core/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/systemtrayfx-core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/systemtrayfx-core/src/main/resources" charset="UTF-8" />
   </component>
 </project>

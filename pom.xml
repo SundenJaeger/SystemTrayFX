@@ -4,14 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.rentoki</groupId>
-    <artifactId>SystemTray</artifactId>
+    <groupId>io.github.sundenjaeger</groupId>
+    <artifactId>SystemTrayFX</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
     <modules>
         <module>swt-modular</module>
-        <module>systemtray-core</module>
+        <module>systemtrayfx-core</module>
         <module>samplerfx</module>
     </modules>
 
@@ -29,8 +29,8 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.rentoki</groupId>
-                <artifactId>systemtray-core</artifactId>
+                <groupId>io.github.sundenjaeger</groupId>
+                <artifactId>systemtrayfx-core</artifactId>
                 <version>1.0.0</version>
             </dependency>
             <dependency>

@@ -2,7 +2,7 @@
   <configuration default="false" name="SamplerFX" type="Application" factoryName="Application">
     <option name="ALTERNATIVE_JRE_PATH" value="25.0.2+10" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-    <option name="MAIN_CLASS_NAME" value="com.systemtray.samplerfx.App" />
+    <option name="MAIN_CLASS_NAME" value="systemtrayfx.samplerfx.App" />
     <module name="samplerfx" />
     <option name="VM_PARAMETERS" value="--enable-native-access=org.eclipse.swt.win32.win32.x86_64,javafx.graphics" />
     <extension name="coverage">
