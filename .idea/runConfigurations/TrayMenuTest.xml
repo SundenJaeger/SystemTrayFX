@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="TrayMenuTest" type="JUnit" factoryName="JUnit">
+    <module name="systemtrayfx-core" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <option name="ALTERNATIVE_JRE_PATH" value="25.0.2+10" />
+    <option name="PACKAGE_NAME" value="systemtrayfx.core" />
+    <option name="MAIN_CLASS_NAME" value="systemtrayfx.core.TrayMenuTest" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="class" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
