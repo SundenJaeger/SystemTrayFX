@@ -21,7 +21,7 @@ notifications, and minimize-to-tray behavior without blocking the main JavaFX ap
 - **Minimize-to-Tray:** Built-in support for capturing window close events and hiding the application to the tray instead of exiting.
 
 # Usage
-> Check the Wiki Page
+> Check the [Wiki Page](https://github.com/SundenJaeger/SystemTrayFX/wiki)
 
 # Platform Support
 
