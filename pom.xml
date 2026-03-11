@@ -15,6 +15,29 @@
         <module>samplerfx</module>
     </modules>
 
+    <name>SystemTrayFX</name>
+    <description>Native system tray support for JavaFX applications using SWT </description>
+    <url>https://github.com/SundenJaeger/SystemTrayFX</url>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>https://github.com/SundenJaeger/SystemTrayFX/blob/master/LICENSE</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Rentoki</name>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>${project.scm.developerConnection}</connection>
+        <developerConnection>scm:git:https://github.com/SundenJaeger/SystemTrayFX.git</developerConnection>
+        <url>${project.url}</url>
+    </scm>
+
     <properties>
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
@@ -106,6 +129,16 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
                     <version>3.4.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>0.9.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>3.2.8</version>
                 </plugin>
             </plugins>
         </pluginManagement>
