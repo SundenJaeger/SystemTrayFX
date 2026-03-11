@@ -36,9 +36,7 @@ class TrayMenuItemTest {
 
     @BeforeAll
     static void startPlatforms() throws InterruptedException {
-        CountDownLatch fxReady = new CountDownLatch(1);
-        Platform.startup(fxReady::countDown);
-        assertTrue(fxReady.await(5, TimeUnit.SECONDS), "JavaFX Platform did not initialise in time");
+        FXPlatformSupport.start();
 
         CountDownLatch swtReady = new CountDownLatch(1);
         Thread swtThread = new Thread(() -> {
@@ -58,7 +56,6 @@ class TrayMenuItemTest {
         if (display != null && !display.isDisposed()) {
             display.asyncExec(display::dispose);
         }
-        Platform.exit();
     }
 
     private Shell shell;

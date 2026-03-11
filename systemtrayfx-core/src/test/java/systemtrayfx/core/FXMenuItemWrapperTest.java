@@ -42,9 +42,7 @@ class FXMenuItemWrapperTest {
     @BeforeAll
     static void startSWT() throws InterruptedException {
         // Boot the JavaFX platform (no stage needed)
-        CountDownLatch fxReady = new CountDownLatch(1);
-        Platform.startup(fxReady::countDown);
-        assertTrue(fxReady.await(5, TimeUnit.SECONDS), "JavaFX Platform did not initialise in time");
+        FXPlatformSupport.start();
 
         // Then start SWT as before
         CountDownLatch swtReady = new CountDownLatch(1);
@@ -67,7 +65,6 @@ class FXMenuItemWrapperTest {
         if (display != null && !display.isDisposed()) {
             display.asyncExec(display::dispose);
         }
-        Platform.exit();
     }
 
     private Shell shell;
