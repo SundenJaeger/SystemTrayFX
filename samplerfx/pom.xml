@@ -48,7 +48,7 @@
                         <!-- Usage: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>systemtrayfx.samplerfx.App</mainClass>
+                            <mainClass>systemtrayfx.samplerfx/systemtrayfx.samplerfx.App</mainClass>
                             <launcher>SamplerFX</launcher>
                             <jlinkZipName>SamplerFX</jlinkZipName>
                             <jlinkImageName>SamplerFX</jlinkImageName>

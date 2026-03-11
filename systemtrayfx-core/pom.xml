@@ -12,6 +12,10 @@
 
     <artifactId>systemtrayfx-core</artifactId>
 
+    <name>SystemTrayFX Core</name>
+    <description>Native system tray support for JavaFX applications using SWT</description>
+    <url>https://github.com/SundenJaeger/SystemTrayFX</url>
+
     <properties>
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
@@ -28,9 +32,8 @@
             <artifactId>javafx-swing</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.platform</groupId>
-            <artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
-            <version>${lib.swt.modular.version}</version>
+            <groupId>io.github.sundenjaeger</groupId>
+            <artifactId>SWTModular</artifactId>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -67,26 +70,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>signing</id>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.sonatype.central</groupId>
-                <artifactId>central-publishing-maven-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <publishingServerId>central</publishingServerId>
-                </configuration>
             </plugin>
         </plugins>
     </build>
