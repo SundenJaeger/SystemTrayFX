@@ -34,6 +34,22 @@ notifications, and minimize-to-tray behavior without blocking the main JavaFX ap
 # Building Locally
 > More Information can be found in [Contributing Page](https://github.com/SundenJaeger/SystemTrayFX/blob/master/CONTRIBUTING.md)
 
+# Demo
+
+A sample application showcasing SystemTrayFX's features is available for download from the [releases](https://github.com/SundenJaeger/SystemTrayFX/releases) tab.
+
+## Requirements
+
+- OS: **Windows 10 or later**
+- Architecture: **x64**
+
+## Gallery
+It's not pretty, but it's honest work lol
+<img width="1122" height="602" alt="image" src="https://github.com/user-attachments/assets/a51aafc4-2355-4d67-bcf3-1b0c88984660" />
+<img width="1116" height="595" alt="image" src="https://github.com/user-attachments/assets/896b27f1-e51d-47d8-80a8-57080ddac30e" />
+<img width="1113" height="603" alt="image" src="https://github.com/user-attachments/assets/72c69062-1ec4-4cb4-9c46-b45d598e7635" />
+<img width="1115" height="602" alt="image" src="https://github.com/user-attachments/assets/8bd3ba7f-cab7-4423-a09b-0933a93411d8" />
+
 # Third-party libraries used in this project
 
 - [**SWT**](https://github.com/eclipse-platform/eclipse.platform.swt) by The Eclipse Foundation under [**EPL-2.0 License**](https://github.com/eclipse-platform/eclipse.platform.swt/blob/master/LICENSE)
