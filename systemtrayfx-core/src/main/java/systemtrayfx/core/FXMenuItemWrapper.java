@@ -19,6 +19,7 @@ package systemtrayfx.core;
 import javafx.application.Platform;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.image.ImageView;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
@@ -78,7 +79,7 @@ import java.util.Map;
  *
  * <p><strong>Important Note:</strong>
  * <ul>
- *   <li>Icons are not currently synchronized from JavaFX to SWT</li>
+ *   <li>Only {@link ImageView} graphics are synchronized to SWT</li>
  * </ul>
  *
  * @see TrayMenuItem
@@ -144,9 +145,19 @@ public class FXMenuItemWrapper extends TrayMenuItem {
     protected void create(Display display, Menu menu, SystemTrayFX ctx) {
         swtMenuItem = new MenuItem(menu, getSWTStyle());
 
+        ImageView fxGraphic = null;
+
+        if (fxItem.getGraphic() instanceof ImageView) {
+            fxGraphic = (ImageView) fxItem.getGraphic();
+        }
+
         setText(fxItem.getText());
         setDisable(fxItem.isDisable());
         setOnAction(fxItem.getOnAction());
+
+        if (fxGraphic != null) {
+            setImage(fxGraphic.getImage());
+        }
 
         applyInitialState(swtMenuItem, ctx);
         installBaseListeners(display, swtMenuItem, ctx);
@@ -175,6 +186,16 @@ public class FXMenuItemWrapper extends TrayMenuItem {
                 display.asyncExec(() -> setDisable(newValue));
             }
         });
+
+        if (fxGraphic != null) {
+            fxGraphic.imageProperty().addListener((observable, oldValue, newValue) -> {
+                if (display == null || display.isDisposed()) return;
+
+                if (!swtMenuItem.isDisposed()) {
+                    display.asyncExec(() -> setImage(newValue));
+                }
+            });
+        }
     }
 
     /**
