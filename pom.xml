@@ -6,7 +6,7 @@
 
     <groupId>io.github.sundenjaeger</groupId>
     <artifactId>SystemTrayFX</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -54,7 +54,7 @@
             <dependency>
                 <groupId>io.github.sundenjaeger</groupId>
                 <artifactId>systemtrayfx-core</artifactId>
-                <version>1.0.0</version>
+                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>org.openjfx</groupId>
