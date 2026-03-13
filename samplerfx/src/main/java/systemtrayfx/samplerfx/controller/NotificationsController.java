@@ -23,7 +23,7 @@ import javafx.scene.control.*;
 public class NotificationsController {
     @FXML
     private void showNoneNotification() {
-        Alert alert = new Alert(Alert.AlertType.NONE);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("None");
         alert.setHeaderText(null);
         alert.setContentText("This is a none type notification.");
