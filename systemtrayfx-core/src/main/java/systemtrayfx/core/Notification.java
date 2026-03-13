@@ -64,6 +64,29 @@ public final class Notification {
     /* ---------------- Public API ---------------- */
 
     /**
+     * Displays a notification with no icon.
+     *
+     * @param title   the notification title
+     * @param message the notification message
+     * @throws NullPointerException if title or message is null
+     */
+    public static void none(String title, String message) {
+        none(title, message, null);
+    }
+
+    /**
+     * Displays a notification with no icon.
+     *
+     * @param title    the notification title
+     * @param message  the notification message
+     * @param onAction optional action invoked when the notification is clicked
+     * @throws NullPointerException if title or message is null
+     */
+    public static void none(String title, String message, EventHandler<ActionEvent> onAction) {
+        build(title, message, NotificationType.NONE, onAction);
+    }
+
+    /**
      * Displays an information notification.
      *
      * @param title   the notification title

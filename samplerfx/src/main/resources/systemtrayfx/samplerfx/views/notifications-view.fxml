@@ -48,6 +48,7 @@
                 <RowConstraints vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
                 <RowConstraints vgrow="SOMETIMES" />
                 <RowConstraints vgrow="SOMETIMES" />
                   <RowConstraints vgrow="SOMETIMES" />
@@ -71,7 +72,7 @@
                         </Label>
                      </children>
                   </VBox>
-                  <VBox spacing="10.0" GridPane.rowIndex="3">
+                  <VBox spacing="10.0" GridPane.rowIndex="4">
                      <children>
                         <Button mnemonicParsing="false" onAction="#showInfoNotification" text="Info" />
                         <Accordion>
@@ -86,7 +87,7 @@
                         <Separator prefWidth="200.0" />
                      </children>
                   </VBox>
-                  <VBox layoutX="10.0" layoutY="88.0" spacing="10.0" GridPane.rowIndex="4">
+                  <VBox layoutX="10.0" layoutY="88.0" spacing="10.0" GridPane.rowIndex="5">
                      <children>
                         <Button mnemonicParsing="false" onAction="#showWarnNotification" text="Warn" />
                         <Accordion>
@@ -101,7 +102,7 @@
                         <Separator prefWidth="200.0" />
                      </children>
                   </VBox>
-                  <VBox layoutX="10.0" layoutY="173.0" spacing="10.0" GridPane.rowIndex="5">
+                  <VBox layoutX="10.0" layoutY="173.0" spacing="10.0" GridPane.rowIndex="6">
                      <children>
                         <Button mnemonicParsing="false" onAction="#showErrorNotification" text="Error" />
                         <Accordion>
@@ -135,6 +136,21 @@
                               <Insets top="10.0" />
                            </VBox.margin>
                         </Label>
+                     </children>
+                  </VBox>
+                  <VBox spacing="10.0" GridPane.rowIndex="3">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#showNoneNotification" text="None" />
+                        <Accordion>
+                           <panes>
+                              <TitledPane animated="false" text="Source Code">
+                                 <content>
+                                    <TextArea editable="false" prefHeight="50.0" prefWidth="200.0" text="Notification.none(&quot;Information&quot;, &quot;This is a none type notification.&quot;);" />
+                                 </content>
+                              </TitledPane>
+                           </panes>
+                        </Accordion>
+                        <Separator prefWidth="200.0" />
                      </children>
                   </VBox>
                </children>
