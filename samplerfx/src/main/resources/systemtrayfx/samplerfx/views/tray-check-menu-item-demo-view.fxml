@@ -85,6 +85,9 @@
                            <font>
                               <Font name="Segoe UI Semilight" size="14.0" />
                            </font>
+                           <tooltip>
+                              <Tooltip text="Disables the menu item when enabled" />
+                           </tooltip>
                         </CheckBox>
                         <Separator />
                         <VBox layoutX="10.0" layoutY="81.0" spacing="5.0">
@@ -98,7 +101,7 @@
                                  <children>
                                     <ToggleButton fx:id="clickMeButton" mnemonicParsing="false" text="Click Me">
                                        <tooltip>
-                                          <Tooltip text="Clicking this will make the menu item checked and vice versa." />
+                                          <Tooltip text="Clicking this toggles the menu item’s checked state" />
                                        </tooltip>
                                     </ToggleButton>
                                  </children>
@@ -113,7 +116,10 @@
                                     <Font name="Segoe UI Semilight" size="15.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="textPropertyTextField" maxHeight="-Infinity" text="Sample TrayCheckMenuItem" />
+                              <TextField fx:id="textPropertyTextField" maxHeight="-Infinity" text="Sample TrayCheckMenuItem">
+                                 <tooltip>
+                                    <Tooltip text="Clicking this toggles the menu item’s checked state." />
+                                 </tooltip></TextField>
                            </children>
                         </VBox>
                         <Separator />
@@ -126,17 +132,26 @@
                               </Label>
                               <HBox spacing="10.0">
                                  <children>
-                                    <Button fx:id="chooseImageButton" mnemonicParsing="false" onAction="#chooseImage" text="Choose Image" />
+                                    <Button fx:id="chooseImageButton" mnemonicParsing="false" onAction="#chooseImage" text="Choose Image">
+                                       <tooltip>
+                                          <Tooltip text="Sets the icon image of the menu item" />
+                                       </tooltip></Button>
                                     <HBox alignment="CENTER_LEFT" spacing="5.0">
                                        <children>
                                           <Label text="Width:" />
-                                          <TextField fx:id="widthTextField" prefWidth="40.0" text="0" />
+                                          <TextField fx:id="widthTextField" prefWidth="40.0" text="0">
+                                             <tooltip>
+                                                <Tooltip text="Sets the width of the menu item icon image" />
+                                             </tooltip></TextField>
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER_LEFT" spacing="5.0">
                                        <children>
                                           <Label text="Height:" />
-                                          <TextField fx:id="heightTextField" prefWidth="40.0" text="0" />
+                                          <TextField fx:id="heightTextField" prefWidth="40.0" text="0">
+                                             <tooltip>
+                                                <Tooltip text="Sets the height of the menu item icon image" />
+                                             </tooltip></TextField>
                                        </children>
                                     </HBox>
                                  </children>

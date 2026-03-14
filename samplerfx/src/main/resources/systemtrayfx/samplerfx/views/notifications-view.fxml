@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -74,7 +75,10 @@
                   </VBox>
                   <VBox spacing="10.0" GridPane.rowIndex="4">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#showInfoNotification" text="Info" />
+                        <Button mnemonicParsing="false" onAction="#showInfoNotification" text="Info">
+                           <tooltip>
+                              <Tooltip text="Shows an INFO type notification" />
+                           </tooltip></Button>
                         <Accordion>
                            <panes>
                               <TitledPane animated="false" text="Source Code">
@@ -89,7 +93,10 @@
                   </VBox>
                   <VBox layoutX="10.0" layoutY="88.0" spacing="10.0" GridPane.rowIndex="5">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#showWarnNotification" text="Warn" />
+                        <Button mnemonicParsing="false" onAction="#showWarnNotification" text="Warn">
+                           <tooltip>
+                              <Tooltip text="Shows a WARN type notification" />
+                           </tooltip></Button>
                         <Accordion>
                            <panes>
                               <TitledPane animated="false" text="Source Code">
@@ -104,7 +111,10 @@
                   </VBox>
                   <VBox layoutX="10.0" layoutY="173.0" spacing="10.0" GridPane.rowIndex="6">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#showErrorNotification" text="Error" />
+                        <Button mnemonicParsing="false" onAction="#showErrorNotification" text="Error">
+                           <tooltip>
+                              <Tooltip text="Shows an ERROR type notification" />
+                           </tooltip></Button>
                         <Accordion>
                            <panes>
                               <TitledPane animated="false" text="Source Code">
@@ -140,7 +150,10 @@
                   </VBox>
                   <VBox spacing="10.0" GridPane.rowIndex="3">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#showNoneNotification" text="None" />
+                        <Button mnemonicParsing="false" onAction="#showNoneNotification" text="None">
+                           <tooltip>
+                              <Tooltip autoHide="true" text="Shows a NONE type notification" />
+                           </tooltip></Button>
                         <Accordion>
                            <panes>
                               <TitledPane animated="false" text="Source Code">

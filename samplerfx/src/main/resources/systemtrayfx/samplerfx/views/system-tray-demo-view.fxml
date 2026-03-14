@@ -86,7 +86,7 @@
                                     <Font name="Segoe UI Semilight" size="15.0" />
                                  </font>
                                  <tooltip>
-                                    <Tooltip text="Setting this to true will make the stage not exit." />
+                                    <Tooltip text="Setting this to true prevents the stage from exiting" />
                                  </tooltip>
                               </CheckBox>
                               <Label fx:id="noteTextField" text="Note: If this is enabled, you must add a TrayExitMenuItem, or call dispose() in a shutdown hook to properly exit the application." wrapText="true">
@@ -107,7 +107,10 @@
                                     <Font name="Segoe UI Semilight" size="15.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="textPropertyTextField" maxHeight="-Infinity" text="SystemTrayFX Sampler" />
+                              <TextField fx:id="textPropertyTextField" maxHeight="-Infinity" text="SystemTrayFX Sampler">
+                                 <tooltip>
+                                    <Tooltip text="Sets the display text of the menu item" />
+                                 </tooltip></TextField>
                            </children>
                         </VBox>
                         <Separator />
@@ -120,7 +123,10 @@
                               </Label>
                               <HBox>
                                  <children>
-                                    <Button fx:id="chooseImageButton" mnemonicParsing="false" onAction="#chooseImage" text="Choose Image" />
+                                    <Button fx:id="chooseImageButton" mnemonicParsing="false" onAction="#chooseImage" text="Choose Image">
+                                       <tooltip>
+                                          <Tooltip text="Sets the icon image of the menu item" />
+                                       </tooltip></Button>
                                  </children>
                               </HBox>
                            </children>

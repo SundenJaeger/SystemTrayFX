@@ -104,7 +104,7 @@
                               <Font name="Segoe UI Semilight" size="14.0" />
                            </font>
                            <tooltip>
-                              <Tooltip text="Setting this to true will make the stage not exit." />
+                              <Tooltip text="Disables the menu item when enabled" />
                            </tooltip>
                         </CheckBox>
                         <Separator />
@@ -115,7 +115,10 @@
                                     <Font name="Segoe UI Semilight" size="15.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="textPropertyTextField" maxHeight="-Infinity" text="Sample TrayMenu" />
+                              <TextField fx:id="textPropertyTextField" maxHeight="-Infinity" text="Sample TrayMenu">
+                                 <tooltip>
+                                    <Tooltip text="Sets the display text of the menu item" />
+                                 </tooltip></TextField>
                            </children>
                         </VBox>
                         <Separator />
@@ -128,17 +131,26 @@
                               </Label>
                               <HBox spacing="10.0">
                                  <children>
-                                    <Button fx:id="chooseImageButton" mnemonicParsing="false" onAction="#chooseImage" text="Choose Image" />
+                                    <Button fx:id="chooseImageButton" mnemonicParsing="false" onAction="#chooseImage" text="Choose Image">
+                                       <tooltip>
+                                          <Tooltip text="Sets the icon image of the menu item" />
+                                       </tooltip></Button>
                                     <HBox alignment="CENTER_LEFT" spacing="5.0">
                                        <children>
                                           <Label text="Width:" />
-                                          <TextField fx:id="widthTextField" prefWidth="40.0" text="0" />
+                                          <TextField fx:id="widthTextField" prefWidth="40.0" text="0">
+                                             <tooltip>
+                                                <Tooltip text="Sets the width of the menu item icon image" />
+                                             </tooltip></TextField>
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER_LEFT" spacing="5.0">
                                        <children>
                                           <Label text="Height:" />
-                                          <TextField fx:id="heightTextField" prefWidth="40.0" text="0" />
+                                          <TextField fx:id="heightTextField" prefWidth="40.0" text="0">
+                                             <tooltip>
+                                                <Tooltip text="Sets the height of the menu item icon image" />
+                                             </tooltip></TextField>
                                        </children>
                                     </HBox>
                                  </children>
