@@ -16,6 +16,9 @@
 
 package systemtrayfx.samplerfx.controller;
 
+import javafx.beans.binding.Bindings;
+import javafx.scene.control.TextField;
+import javafx.util.converter.NumberStringConverter;
 import systemtrayfx.core.SystemTrayFX;
 import systemtrayfx.core.TrayMenuItem;
 import javafx.fxml.FXML;
@@ -31,6 +34,8 @@ public abstract class BaseTrayMenuItemDemoController extends BaseDemoController 
 
     @FXML
     protected CheckBox isDisabledCheckBox;
+    @FXML
+    protected TextField widthTextField, heightTextField;
 
     public BaseTrayMenuItemDemoController(SystemTrayFX systemTrayFX) {
         super(systemTrayFX);
@@ -42,6 +47,21 @@ public abstract class BaseTrayMenuItemDemoController extends BaseDemoController 
     @Override
     protected void initialize() {
         addTrayMenuItem();
+
+        this.widthTextField.disableProperty().bind(trayMenuItem.imageProperty().isNull());
+        this.heightTextField.disableProperty().bind(trayMenuItem.imageProperty().isNull());
+
+        Bindings.bindBidirectional(
+                widthTextField.textProperty(),
+                trayMenuItem.imageWidthProperty(),
+                new NumberStringConverter()
+        );
+
+        Bindings.bindBidirectional(
+                heightTextField.textProperty(),
+                trayMenuItem.imageHeightProperty(),
+                new NumberStringConverter()
+        );
     }
 
     @FXML
@@ -53,7 +73,8 @@ public abstract class BaseTrayMenuItemDemoController extends BaseDemoController 
 
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
-            trayMenuItem.setImage(new Image(file.toURI().toString()));
+            Image image = new Image(file.toURI().toString());
+            trayMenuItem.setImage(image);
         }
     }
 

@@ -124,9 +124,21 @@
                                     <Font name="Segoe UI Semilight" size="15.0" />
                                  </font>
                               </Label>
-                              <HBox>
+                              <HBox spacing="10.0">
                                  <children>
                                     <Button fx:id="chooseImageButton" mnemonicParsing="false" onAction="#chooseImage" text="Choose Image" />
+                                    <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                       <children>
+                                          <Label text="Width:" />
+                                          <TextField fx:id="widthTextField" prefWidth="40.0" text="0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                       <children>
+                                          <Label text="Height:" />
+                                          <TextField fx:id="heightTextField" prefWidth="40.0" text="0" />
+                                       </children>
+                                    </HBox>
                                  </children>
                               </HBox>
                            </children>
