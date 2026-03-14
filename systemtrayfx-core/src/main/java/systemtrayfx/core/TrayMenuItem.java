@@ -135,12 +135,46 @@ public class TrayMenuItem {
     }
 
     /**
+     * Gets the display width of the menu item icon image in dp.
+     *
+     * @return the icon image width in dp
+     */
+    public int getImageWidth() {
+        return imageWidth.get();
+    }
+
+    /**
+     * Gets the display height of the menu item icon image.
+     *
+     * @return the icon image height in dp
+     */
+    public int getImageHeight() {
+        return imageHeight.get();
+    }
+
+    /**
      * Sets the icon image displayed on the menu item.
+     *
+     * <p>The icon will be rendered at the current {@link #imageWidthProperty()} and
+     * {@link #imageHeightProperty()} values. If not previously set, these default to 16 dp.
      *
      * @param image the new icon image (may be null to remove icon)
      */
     public void setImage(Image image) {
+        setImage(image, imageWidth.get(), imageHeight.get());
+    }
+
+    /**
+     * Sets the icon image displayed on the menu item with explicit dimensions.
+     *
+     * @param image  the new icon image (may be null to remove icon)
+     * @param width  the desired display width in dp
+     * @param height the desired display height in dp
+     */
+    public void setImage(Image image, int width, int height) {
         this.image.set(image);
+        this.imageWidth.set(width);
+        this.imageHeight.set(height);
     }
 
     /**
@@ -186,6 +220,8 @@ public class TrayMenuItem {
     private final ObjectProperty<Image> image = new SimpleObjectProperty<>();
     private final BooleanProperty disable = new SimpleBooleanProperty(false);
     private final ObjectProperty<EventHandler<ActionEvent>> onAction = new SimpleObjectProperty<>();
+    private final IntegerProperty imageWidth = new SimpleIntegerProperty(16);
+    private final IntegerProperty imageHeight = new SimpleIntegerProperty(16);
 
     /**
      * Returns the text property for binding.
@@ -221,6 +257,26 @@ public class TrayMenuItem {
      */
     public ObjectProperty<EventHandler<ActionEvent>> onActionProperty() {
         return onAction;
+    }
+
+    /**
+     * Returns the image width property for binding.
+     * Defaults to 16 dp if not explicitly set.
+     *
+     * @return the image width property
+     */
+    public IntegerProperty imageWidthProperty() {
+        return imageWidth;
+    }
+
+    /**
+     * Returns the image height property for binding.
+     * Defaults to 16 dp if not explicitly set.
+     *
+     * @return the image height property
+     */
+    public IntegerProperty imageHeightProperty() {
+        return imageHeight;
     }
 
     /* ---------------- Protected Methods ---------------- */
@@ -270,7 +326,7 @@ public class TrayMenuItem {
         menuItem.addListener(SWT.Selection, selectionListener);
 
         if (getImage() != null) {
-            menuItem.setImage(ctx.createImage(Utils.toSWTImage(getImage())));
+            menuItem.setImage(ctx.createImage(Utils.toSWTImage(getImage()), imageWidth.get(), imageHeight.get()));
         }
         menuItem.setEnabled(!isDisabled());
     }
@@ -325,6 +381,30 @@ public class TrayMenuItem {
 
                 if (newValue != null) {
                     menuItem.setImage(ctx.createImage(Utils.toSWTImage(newValue)));
+                }
+            });
+        });
+
+        imageWidth.addListener((observable, oldValue, newValue) -> {
+            if (display == null || display.isDisposed()) return;
+
+            display.asyncExec(() -> {
+                if (menuItem.isDisposed()) return;
+
+                if (newValue != null && getImage() != null) {
+                    menuItem.setImage(ctx.createImage(Utils.toSWTImage(getImage()), newValue.intValue(), imageHeight.get()));
+                }
+            });
+        });
+
+        imageHeight.addListener((observable, oldValue, newValue) -> {
+            if (display == null || display.isDisposed()) return;
+
+            display.asyncExec(() -> {
+                if (menuItem.isDisposed()) return;
+
+                if (newValue != null && getImage() != null) {
+                    menuItem.setImage(ctx.createImage(Utils.toSWTImage(getImage()), imageWidth.get(), newValue.intValue()));
                 }
             });
         });

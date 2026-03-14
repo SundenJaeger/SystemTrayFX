@@ -398,7 +398,7 @@ public class SystemTrayFX implements ISystemTray {
     /* ---------------- Protected Methods ---------------- */
 
     /**
-     * Creates an SWT image from the provided image data.
+     * Creates an SWT image from the provided image data, defaulting to 16x16 dp.
      * <p>
      * The image is scaled based on the system DPI to ensure the tray icon
      * renders at an appropriate size on high-DPI displays.
@@ -408,21 +408,38 @@ public class SystemTrayFX implements ISystemTray {
      * </p>
      *
      * @param imageData the image data to convert
-     * @return the created, DPI-scaled SWT image
+     * @return the created, DPI-scaled SWT image at 16x16 dp
      */
     protected org.eclipse.swt.graphics.Image createImage(ImageData imageData) {
+        return createImage(imageData, 16, 16);
+    }
+
+    /**
+     * Creates an SWT image from the provided image data, scaled to the specified dimensions.
+     * <p>
+     * The provided width and height are treated as logical dp values and are scaled
+     * by the system DPI to produce the correct physical pixel size on high-DPI displays.
+     * </p>
+     * <p>
+     * The created image is tracked for proper disposal.
+     * </p>
+     *
+     * @param imageData the image data to convert
+     * @param width     the desired logical width in dp
+     * @param height    the desired logical height in dp
+     * @return the created, DPI-scaled SWT image
+     */
+    protected org.eclipse.swt.graphics.Image createImage(ImageData imageData, int width, int height) {
         int dpiX = display.getDPI().x;
         int dpiY = display.getDPI().y;
 
-        //96 for baseline DPI (1920 x 1080 | Scaling: 100%)
         float scaleX = dpiX / 96f;
         float scaleY = dpiY / 96f;
 
-        //Windows tray icon is 16 x 16, so I think this should be good?
-        int width = Math.round(16 * scaleX);
-        int height = Math.round(16 * scaleY);
+        int width2 = Math.round(width * scaleX);
+        int height2 = Math.round(height * scaleY);
 
-        org.eclipse.swt.graphics.Image image = new org.eclipse.swt.graphics.Image(display, imageData.scaledTo(width, height));
+        org.eclipse.swt.graphics.Image image = new org.eclipse.swt.graphics.Image(display, imageData.scaledTo(width2, height2));
         swtImages.add(image);
 
         return image;

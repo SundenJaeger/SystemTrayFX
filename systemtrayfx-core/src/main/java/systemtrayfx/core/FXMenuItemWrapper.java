@@ -156,7 +156,7 @@ public class FXMenuItemWrapper extends TrayMenuItem {
         setOnAction(fxItem.getOnAction());
 
         if (fxGraphic != null) {
-            setImage(fxGraphic.getImage());
+            setImage(fxGraphic.getImage(), (int) fxGraphic.getFitWidth(), (int) fxGraphic.getFitHeight());
         }
 
         applyInitialState(swtMenuItem, ctx);
