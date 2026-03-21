@@ -1,3 +1,5 @@
+![Maven Central Version](https://img.shields.io/maven-central/v/io.github.sundenjaeger/SystemTrayFX)
+
 # SystemTrayFX
 
 SystemTrayFX is a JavaFX library that provides a native system tray implementation by integrating with the Standard
