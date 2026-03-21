@@ -8,9 +8,8 @@
 1. **IntelliJ IDEA (Latest Version)** is highly recommended. While you may use any IDE of your choice, the project structure and configurations are optimized for IntelliJ.
 2. JDK 25
 
-## Running the Build
-You must do `mvn clean install` first to install the modular version of SWT into your local repository. This is required because the project includes a sampler that uses `jlink`, which does not support the automatic modules found in standard SWT distributions.
-
+## Running the Sampler
+IntelliJ users can use the provided run configuration. Otherwise, run from the project root: `mvn -pl samplerfx javafx:run`
 
 ## Pull Request Process
 - You must create a new branch for every feature or bug fix.
