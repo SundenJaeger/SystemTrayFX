@@ -55,3 +55,4 @@ It's not pretty, but it's honest work lol
 # Third-party libraries used in this project
 
 - [**SWT**](https://github.com/eclipse-platform/eclipse.platform.swt) by The Eclipse Foundation under [**EPL-2.0 License**](https://github.com/eclipse-platform/eclipse.platform.swt/blob/master/LICENSE)
+- [**SWTModular**](https://github.com/SundenJaeger/SWTModular) by SundenJaeger under [**EPL-2.0 License**](https://github.com/SundenJaeger/SWTModular/blob/master/LICENSE)
